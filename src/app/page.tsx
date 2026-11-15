@@ -249,7 +249,126 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. MULTI-SUPPLIER LIVE COMPARISON SECTION */}
+      {/* 5. DUAL-SIDED ECOSYSTEM: FOR BREEDERS (SUPPLIERS) & RETAILERS (VENDORS) */}
+      <section className="py-16 sm:py-20 bg-stone-50 border-t border-stone-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-[10px] font-sans font-semibold tracking-[0.3em] text-gray-500 uppercase block mb-2">
+              THE FINDOM B2B MARKETPLACE
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 font-light">
+              Connecting India’s Master Breeders with Aquarium Retailers
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-600 mt-3 font-normal leading-relaxed">
+              Whether you operate a 200-tank commercial hatchery or a luxury retail aquarium gallery, Findom provides the infrastructure, escrow custody, and cargo logistics for secure live ornamental commerce.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Card: For Breeders / Suppliers */}
+            <div className="bg-white border border-gray-200 p-8 sm:p-10 flex flex-col justify-between shadow-xs hover:border-gray-900 transition duration-300">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold tracking-[0.2em] uppercase">
+                    For Breeders & Fish Suppliers
+                  </span>
+                  <Building2 className="w-5 h-5 text-emerald-700" />
+                </div>
+
+                <h3 className="font-serif text-2xl text-gray-900 font-normal mb-3">
+                  Expand Your Commercial Hatchery Nationwide
+                </h3>
+
+                <p className="text-xs text-gray-600 leading-relaxed mb-6 font-light">
+                  List your live tank stock, set your own wholesale prices in Indian Rupees (₹), and sell directly to verified retail aquarium shops across 28 states without regional broker markups.
+                </p>
+
+                <ul className="space-y-3 mb-8 text-xs text-gray-700">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>100% Price & Inventory Autonomy:</strong> Set unit pricing, minimum order quantities (MOQ), and live tank availability.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Pre-Dispatch Photo Upload:</strong> Attach live bagged photos before airport handover to eliminate customer dispute ambiguity.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <span><strong>Guaranteed Escrow Payouts:</strong> Funds are locked in escrow prior to dispatch and released straight to your bank account upon delivery sign-off.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/auth/register/supplier"
+                  className="flex-1 text-center px-6 py-3 bg-gray-900 hover:bg-black text-white text-xs font-semibold tracking-wider uppercase transition shadow-xs"
+                >
+                  Register as Supplier
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="flex-1 text-center px-6 py-3 border border-gray-300 hover:border-gray-900 text-gray-900 text-xs font-semibold tracking-wider uppercase transition"
+                >
+                  Supplier Sign In
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Card: For Retailers / Vendors */}
+            <div className="bg-gray-950 text-white border border-gray-800 p-8 sm:p-10 flex flex-col justify-between shadow-xl">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 text-[10px] font-bold tracking-[0.2em] uppercase">
+                    For Retailers & Aquarium Vendors
+                  </span>
+                  <Package className="w-5 h-5 text-sky-400" />
+                </div>
+
+                <h3 className="font-serif text-2xl text-white font-normal mb-3">
+                  Source Direct from India's Premier Hatcheries
+                </h3>
+
+                <p className="text-xs text-gray-300 leading-relaxed mb-6 font-light">
+                  Bypass traditional multi-tier distributors. Source exotic Discus, imported Guppy strains, Arowanas, and Cichlids at farm-gate prices directly from Kolathur, Galiff Street, and Kerala.
+                </p>
+
+                <ul className="space-y-3 mb-8 text-xs text-gray-300">
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <span><strong>Multi-Supplier Price Comparison:</strong> Compare 5+ breeders side-by-side for the same fish species to secure the best wholesale deal.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <span><strong>Pre-Dispatch Visual Sign-Off:</strong> Inspect high-res photographs of your actual fish before the flight departs.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <span><strong>100% Live Arrival & Escrow Protection:</strong> Complimentary DOA casualty compensation backed by air cargo white-glove delivery.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="pt-6 border-t border-gray-800 flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/auth/register/retailer"
+                  className="flex-1 text-center px-6 py-3 bg-white hover:bg-gray-100 text-gray-950 text-xs font-semibold tracking-wider uppercase transition shadow-xs"
+                >
+                  Register as Retailer
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="flex-1 text-center px-6 py-3 border border-gray-700 hover:border-white text-white text-xs font-semibold tracking-wider uppercase transition"
+                >
+                  Retailer Sign In
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. MULTI-SUPPLIER LIVE COMPARISON SECTION */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gray-950 text-white p-8 sm:p-14 relative overflow-hidden">

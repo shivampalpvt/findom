@@ -41,43 +41,10 @@ export default function Navbar() {
             <span className="font-semibold text-white">White Glove Air Cargo Delivery</span> on all wholesale orders over ₹15,000
           </p>
 
-          {/* Role switcher for quick testing */}
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-gray-400 text-[10px] uppercase tracking-wider hidden md:inline">Instant Role Test:</span>
-            <div className="inline-flex rounded-sm bg-gray-800 p-0.5 border border-gray-700 text-[10px]">
-              <button
-                onClick={() => switchRole('visitor')}
-                className={`px-2 py-0.5 rounded-xs transition ${
-                  !currentUser ? 'bg-white text-gray-900 font-semibold' : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                Visitor (Logged Out)
-              </button>
-              <button
-                onClick={() => switchRole('retailer')}
-                className={`px-2 py-0.5 rounded-xs transition ${
-                  currentUser?.role === 'retailer' ? 'bg-white text-gray-900 font-semibold' : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                Retailer
-              </button>
-              <button
-                onClick={() => switchRole('supplier')}
-                className={`px-2 py-0.5 rounded-xs transition ${
-                  currentUser?.role === 'supplier' ? 'bg-white text-gray-900 font-semibold' : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                Supplier
-              </button>
-              <button
-                onClick={() => switchRole('admin')}
-                className={`px-2 py-0.5 rounded-xs transition ${
-                  currentUser?.role === 'admin' ? 'bg-white text-gray-900 font-semibold' : 'text-gray-300 hover:text-white'
-                }`}
-              >
-                Admin
-              </button>
-            </div>
+          <div className="flex items-center gap-4 text-gray-300 text-[11px] tracking-wider uppercase font-medium">
+            <span className="hidden md:inline text-gray-400">Pan-India Live Arrival Guaranteed</span>
+            <span className="text-gray-600 hidden md:inline">•</span>
+            <span>Wholesale Support: +91 98200 11223</span>
           </div>
         </div>
       </div>
