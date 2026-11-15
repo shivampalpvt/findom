@@ -20,7 +20,7 @@ import { useMarketplace } from '@/lib/store';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { currentUser, switchRole, signOut, cart, notifications, markNotificationRead } = useMarketplace();
+  const { currentUser, signOut, cart, notifications, markNotificationRead } = useMarketplace();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showRegisterMenu, setShowRegisterMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

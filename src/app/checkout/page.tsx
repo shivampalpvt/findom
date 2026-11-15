@@ -24,23 +24,18 @@ import { useMarketplace } from '@/lib/store';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, currentUser, switchRole, placeOrder, allProfiles } = useMarketplace();
-
-  // If visitor, helper to switch to retailer
-  const handleSwitchToRetailer = () => {
-    switchRole('retailer');
-  };
+  const { cart, currentUser, registerUser, placeOrder, allProfiles } = useMarketplace();
 
   // Address Form State (Pre-filled with retailer profile if available)
   const [formData, setFormData] = useState({
-    shopName: currentUser?.business_name || 'Oceanic Blue Aquarium & Pets',
-    contactPerson: currentUser?.owner_name || 'Amitabh Sharma',
-    phone: currentUser?.phone || '+91 98200 11223',
-    gstin: '27AABCU9603R1ZM',
-    addressLine: currentUser?.address || 'Shop 14, Hill Road, Bandra West',
+    shopName: currentUser?.business_name || '',
+    contactPerson: currentUser?.owner_name || '',
+    phone: currentUser?.phone || '',
+    gstin: currentUser?.gstin || '',
+    addressLine: currentUser?.address || '',
     city: currentUser?.city || 'Mumbai',
     state: currentUser?.state || 'Maharashtra',
-    pincode: currentUser?.pincode || '400050',
+    pincode: currentUser?.pincode || '',
     nearestAirport: 'Chhatrapati Shivaji Maharaj Intl (BOM) Air Cargo Terminal',
     deliveryNotes: 'Please ensure oxygen double-bagging and thermocol insulation for morning flight.',
   });
@@ -101,7 +96,23 @@ export default function CheckoutPage() {
     e.preventDefault();
 
     if (!currentUser) {
-      switchRole('retailer');
+      registerUser({
+        id: `ret-${Date.now()}`,
+        role: 'retailer',
+        business_name: formData.shopName || 'Retail Aquarium Store',
+        owner_name: formData.contactPerson || 'Store Proprietor',
+        email: 'retailer@order.in',
+        phone: formData.phone || '',
+        city: formData.city || 'Mumbai',
+        state: formData.state || 'Maharashtra',
+        pincode: formData.pincode || '',
+        address: formData.addressLine || '',
+        gstin: formData.gstin || '',
+        verification_status: 'approved',
+        rating: 5.0,
+        review_count: 0,
+        created_at: new Date().toISOString(),
+      });
     }
 
     setIsSubmitting(true);
@@ -274,21 +285,19 @@ export default function CheckoutPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         {/* User Session Banner */}
         {!currentUser && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-900">
+          <div className="bg-sky-50 border border-sky-200 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-sky-900">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+              <AlertCircle className="w-5 h-5 text-sky-600 shrink-0" />
               <span>
-                You are currently in Public Visitor mode. Checkout will automatically assign order to verified retailer{' '}
-                <strong>Oceanic Blue Aquarium & Pets (Mumbai)</strong>.
+                Ordering as a guest aquarium retail store. Enter your physical shop delivery details below, or sign in to save orders to your portal.
               </span>
             </div>
-            <button
-              type="button"
-              onClick={handleSwitchToRetailer}
-              className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold shrink-0 transition"
+            <Link
+              href="/auth/login"
+              className="px-4 py-2 bg-sky-700 hover:bg-sky-800 text-white rounded-lg font-bold shrink-0 transition"
             >
-              Switch to Retailer Demo Account
-            </button>
+              Sign In to Your Account
+            </Link>
           </div>
         )}
 

@@ -10,7 +10,7 @@ export default function RetailerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { currentUser, switchRole } = useMarketplace();
+  const { currentUser } = useMarketplace();
 
   // If unauthenticated (public guest/visitor)
   if (!currentUser) {
@@ -47,13 +47,6 @@ export default function RetailerLayout({
             >
               Register Aquarium Retail Store
             </Link>
-
-            <button
-              onClick={() => switchRole('retailer')}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-dashed border-gray-300 text-gray-600 text-xs hover:border-gray-400 hover:text-gray-900 transition"
-            >
-              Demo: Quick Authorize as Retailer
-            </button>
 
             <Link
               href="/"
@@ -95,13 +88,6 @@ export default function RetailerLayout({
             >
               Go to Your Supplier Dashboard
             </Link>
-
-            <button
-              onClick={() => switchRole('retailer')}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 text-xs font-medium hover:bg-gray-50 transition"
-            >
-              Switch Role to Retailer
-            </button>
 
             <Link
               href="/"

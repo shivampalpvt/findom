@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ShieldAlert, Lock, ArrowLeft, KeyRound, Shield } from 'lucide-react';
+import { ShieldAlert, Lock, ArrowLeft, KeyRound } from 'lucide-react';
 import { useMarketplace } from '@/lib/store';
 
 export default function AdminLayout({
@@ -10,7 +10,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { currentUser, switchRole } = useMarketplace();
+  const { currentUser } = useMarketplace();
 
   // If unauthenticated (public guest/visitor)
   if (!currentUser) {
@@ -40,14 +40,6 @@ export default function AdminLayout({
             >
               <KeyRound className="w-4 h-4" /> Sign In to Admin Console
             </Link>
-
-            {/* Quick Demo Auth for reviewer convenience */}
-            <button
-              onClick={() => switchRole('admin')}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-stone-900 border border-stone-700 text-stone-300 text-xs font-medium hover:border-stone-500 hover:text-white transition"
-            >
-              <Shield className="w-3.5 h-3.5 text-purple-400" /> Demo: Quick Authorize as Admin
-            </button>
 
             <Link
               href="/"
@@ -95,13 +87,6 @@ export default function AdminLayout({
             >
               Go to Your {currentUser.role === 'supplier' ? 'Supplier' : 'Retailer'} Portal
             </Link>
-
-            <button
-              onClick={() => switchRole('admin')}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-stone-900 border border-stone-700 text-stone-300 text-xs font-medium hover:border-stone-500 hover:text-white transition"
-            >
-              <Shield className="w-3.5 h-3.5 text-purple-400" /> Switch to Administrator Role
-            </button>
 
             <Link
               href="/"

@@ -10,7 +10,7 @@ export default function SupplierLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { currentUser, switchRole } = useMarketplace();
+  const { currentUser } = useMarketplace();
 
   // If unauthenticated (public guest/visitor)
   if (!currentUser) {
@@ -47,13 +47,6 @@ export default function SupplierLayout({
             >
               Register New Breeding Farm
             </Link>
-
-            <button
-              onClick={() => switchRole('supplier')}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-dashed border-gray-300 text-gray-600 text-xs hover:border-gray-400 hover:text-gray-900 transition"
-            >
-              Demo: Quick Authorize as Supplier
-            </button>
 
             <Link
               href="/"
@@ -95,13 +88,6 @@ export default function SupplierLayout({
             >
               Go to Your Retailer Dashboard
             </Link>
-
-            <button
-              onClick={() => switchRole('supplier')}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-300 text-gray-700 text-xs font-medium hover:bg-gray-50 transition"
-            >
-              Switch Role to Supplier
-            </button>
 
             <Link
               href="/"

@@ -66,6 +66,12 @@ interface MarketplaceContextType {
     adminNotes: string
   ) => void;
   signOut: () => Promise<void>;
+  loginUser: (
+    email: string,
+    password?: string,
+    role?: UserRole
+  ) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  registerUser: (profile: UserProfile) => void;
   updateUserVerification: (userId: string, status: UserProfile['verification_status']) => void;
   markNotificationRead: (id: string) => void;
 }
@@ -82,19 +88,95 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Local storage persistence
+  // User session persistence
   useEffect(() => {
-    const saved = localStorage.getItem('findom_user_role');
-    if (saved === 'visitor' || !saved) {
-      setCurrentUser(null);
-    } else if (saved === 'supplier') {
-      setCurrentUser(INITIAL_PROFILES.find((p) => p.role === 'supplier') || null);
-    } else if (saved === 'retailer') {
-      setCurrentUser(INITIAL_PROFILES.find((p) => p.role === 'retailer') || null);
-    } else if (saved === 'admin') {
-      setCurrentUser(INITIAL_PROFILES.find((p) => p.role === 'admin') || null);
+    try {
+      const savedUser = localStorage.getItem('findom_session_user');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && parsed.id && parsed.email) {
+          setCurrentUser(parsed);
+          return;
+        }
+      }
+    } catch (e) {
+      // ignore
     }
+    // Clean legacy key
+    localStorage.removeItem('findom_user_role');
+    setCurrentUser(null);
   }, []);
+
+  const registerUser = (profile: UserProfile) => {
+    setCurrentUser(profile);
+    setAllProfiles((prev) => [profile, ...prev.filter((p) => p.email.toLowerCase() !== profile.email.toLowerCase())]);
+    try {
+      localStorage.setItem('findom_session_user', JSON.stringify(profile));
+      localStorage.removeItem('findom_user_role');
+    } catch (e) {}
+  };
+
+  const loginUser = async (
+    email: string,
+    password?: string,
+    role?: UserRole
+  ): Promise<{ success: boolean; error?: string; user?: UserProfile }> => {
+    const cleanEmail = email.trim().toLowerCase();
+
+    // 1. Check Supabase Auth
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (supabase && password) {
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
+        if (authError) {
+          console.warn('Supabase signIn notice:', authError.message);
+        } else if (authData?.user) {
+          const meta = authData.user.user_metadata || {};
+          const matchedProfile: UserProfile = {
+            id: authData.user.id,
+            role: (meta.role as UserRole) || role || 'retailer',
+            business_name: meta.business_name || cleanEmail.split('@')[0],
+            owner_name: meta.owner_name || 'Business Owner',
+            email: cleanEmail,
+            phone: meta.phone || '',
+            city: meta.city || 'India',
+            state: meta.state || 'India',
+            pincode: meta.pincode || '',
+            verification_status: 'approved',
+            rating: 5.0,
+            review_count: 0,
+            created_at: new Date().toISOString(),
+          };
+          registerUser(matchedProfile);
+          return { success: true, user: matchedProfile };
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase auth catch:', err);
+    }
+
+    // 2. Check registered accounts
+    const existing = allProfiles.find((p) => p.email.toLowerCase() === cleanEmail);
+    if (!existing) {
+      return {
+        success: false,
+        error: `No account registered with "${cleanEmail}". Please check your email or register a new account.`,
+      };
+    }
+
+    if (role && existing.role !== role) {
+      return {
+        success: false,
+        error: `This account is registered as a ${existing.role.toUpperCase()}, not a ${role.toUpperCase()}. Please switch role or use the appropriate account.`,
+      };
+    }
+
+    registerUser(existing);
+    return { success: true, user: existing };
+  };
 
   const signOut = async () => {
     try {
@@ -106,25 +188,21 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
       // ignore
     }
     setCurrentUser(null);
+    localStorage.removeItem('findom_session_user');
     localStorage.removeItem('findom_user_role');
   };
 
   const switchRole = (role: UserRole | 'visitor') => {
     if (role === 'visitor') {
       setCurrentUser(null);
+      localStorage.removeItem('findom_session_user');
       localStorage.setItem('findom_user_role', 'visitor');
-    } else if (role === 'supplier') {
-      const sup = allProfiles.find((p) => p.role === 'supplier') || INITIAL_PROFILES[0];
-      setCurrentUser(sup);
-      localStorage.setItem('findom_user_role', 'supplier');
-    } else if (role === 'retailer') {
-      const ret = allProfiles.find((p) => p.role === 'retailer') || INITIAL_PROFILES.find((p) => p.role === 'retailer') || null;
-      setCurrentUser(ret);
-      localStorage.setItem('findom_user_role', 'retailer');
-    } else if (role === 'admin') {
-      const adm = allProfiles.find((p) => p.role === 'admin') || INITIAL_PROFILES.find((p) => p.role === 'admin') || null;
-      setCurrentUser(adm);
-      localStorage.setItem('findom_user_role', 'admin');
+    } else {
+      const matched = allProfiles.find((p) => p.role === role);
+      if (matched) {
+        setCurrentUser(matched);
+        localStorage.setItem('findom_session_user', JSON.stringify(matched));
+      }
     }
   };
 
@@ -583,6 +661,8 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
         resolveDispute,
         updateUserVerification,
         signOut,
+        loginUser,
+        registerUser,
         markNotificationRead,
       }}
     >

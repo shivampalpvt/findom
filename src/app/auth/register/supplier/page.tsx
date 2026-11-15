@@ -21,12 +21,14 @@ import { useMarketplace } from '@/lib/store';
 
 export default function RegisterSupplierPage() {
   const router = useRouter();
-  const { setCurrentUser, switchRole } = useMarketplace();
+  const { registerUser } = useMarketplace();
 
   const [formData, setFormData] = useState({
     businessName: '',
     ownerName: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     phone: '',
     city: 'Chennai',
     state: 'Tamil Nadu',
@@ -42,9 +44,21 @@ export default function RegisterSupplierPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      setFormError('Passwords do not match. Please ensure both password fields are identical.');
+      return;
+    }
+    if (formData.password && formData.password.length < 6) {
+      setFormError('Password must be at least 6 characters long.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -52,7 +66,7 @@ export default function RegisterSupplierPage() {
       if (supabase && formData.email) {
         await supabase.auth.signUp({
           email: formData.email,
-          password: 'password123',
+          password: formData.password || 'password123',
           options: {
             data: {
               role: 'supplier',
@@ -71,39 +85,36 @@ export default function RegisterSupplierPage() {
       console.warn('Supabase supplier register notice:', err);
     }
 
+    // Create user profile with the exact data the user entered
+    const newSupplier = {
+      id: `sup-${Date.now()}`,
+      role: 'supplier' as const,
+      business_name: formData.businessName || 'Aqua Breeders Enterprise',
+      owner_name: formData.ownerName || 'Proprietor',
+      email: formData.email,
+      phone: formData.phone,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+      address: formData.address,
+      hub: formData.hub,
+      gstin: formData.gstin || '33AAACB1234F1Z8',
+      bank_account: formData.bankAccount || 'HDFC0001234 - 501002881923',
+      bank_ifsc: formData.bankIfsc || 'HDFC0001234',
+      business_doc_url: formData.docUrl,
+      verification_status: 'pending' as const,
+      rating: 5.0,
+      review_count: 0,
+      created_at: new Date().toISOString(),
+    };
+
+    registerUser(newSupplier);
+    setIsSubmitting(false);
+    setIsSuccess(true);
+
     setTimeout(() => {
-      // Create user profile
-      const newSupplier = {
-        id: `sup-${Date.now()}`,
-        role: 'supplier' as const,
-        business_name: formData.businessName || 'Aqua Breeders Enterprise',
-        owner_name: formData.ownerName || 'Proprietor',
-        email: formData.email,
-        phone: formData.phone,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-        address: formData.address,
-        hub: formData.hub,
-        gstin: formData.gstin || '33AAACB1234F1Z8',
-        bank_account: formData.bankAccount || 'HDFC0001234 - 501002881923',
-        bank_ifsc: formData.bankIfsc || 'HDFC0001234',
-        business_doc_url: formData.docUrl,
-        verification_status: 'pending' as const,
-        rating: 5.0,
-        review_count: 0,
-        created_at: new Date().toISOString(),
-      };
-
-      setCurrentUser(newSupplier);
-      switchRole('supplier');
-      setIsSubmitting(false);
-      setIsSuccess(true);
-
-      setTimeout(() => {
-        router.push('/supplier');
-      }, 1500);
-    }, 600);
+      router.push('/supplier');
+    }, 1500);
   };
 
   return (
@@ -128,6 +139,12 @@ export default function RegisterSupplierPage() {
             Sell directly to verified aquarium shops across India. Guaranteed escrow payments, airport cold-chain pickup, and zero non-payment risk.
           </p>
         </div>
+
+        {formError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-xs flex items-center gap-3">
+            <span className="font-bold">Error:</span> {formError}
+          </div>
+        )}
 
         {isSuccess ? (
           <div className="bg-white p-8 rounded-2xl border border-emerald-300 shadow-xl text-center space-y-4 animate-in fade-in zoom-in-95">
@@ -205,6 +222,34 @@ export default function RegisterSupplierPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Account Password *
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Create a secure password (min 6 characters)"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Confirm Password *
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Confirm password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono"
                   />
                 </div>
               </div>

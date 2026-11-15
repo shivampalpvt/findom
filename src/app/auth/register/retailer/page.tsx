@@ -20,12 +20,14 @@ import { useMarketplace } from '@/lib/store';
 
 export default function RegisterRetailerPage() {
   const router = useRouter();
-  const { setCurrentUser, switchRole } = useMarketplace();
+  const { registerUser } = useMarketplace();
 
   const [formData, setFormData] = useState({
     shopName: '',
     ownerName: '',
     email: '',
+    password: '',
+    confirmPassword: '',
     phone: '',
     gstin: '',
     city: 'Mumbai',
@@ -37,9 +39,21 @@ export default function RegisterRetailerPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      setFormError('Passwords do not match. Please ensure both password fields are identical.');
+      return;
+    }
+    if (formData.password && formData.password.length < 6) {
+      setFormError('Password must be at least 6 characters long.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -47,7 +61,7 @@ export default function RegisterRetailerPage() {
       if (supabase && formData.email) {
         await supabase.auth.signUp({
           email: formData.email,
-          password: 'password123',
+          password: formData.password || 'password123',
           options: {
             data: {
               role: 'retailer',
@@ -63,35 +77,33 @@ export default function RegisterRetailerPage() {
     } catch (err) {
       console.warn('Supabase register notice:', err);
     }
+
+    const newRetailer = {
+      id: `ret-${Date.now()}`,
+      role: 'retailer' as const,
+      business_name: formData.shopName || 'Aqua Paradise Pets & Marine',
+      owner_name: formData.ownerName || 'Store Proprietor',
+      email: formData.email,
+      phone: formData.phone,
+      city: formData.city,
+      state: formData.state,
+      pincode: formData.pincode,
+      address: formData.address,
+      gstin: formData.gstin || '27AABCO8812D1Z0',
+      business_doc_url: formData.docUrl,
+      verification_status: 'approved' as const,
+      rating: 5.0,
+      review_count: 0,
+      created_at: new Date().toISOString(),
+    };
+
+    registerUser(newRetailer);
+    setIsSubmitting(false);
+    setIsSuccess(true);
+
     setTimeout(() => {
-      const newRetailer = {
-        id: `ret-${Date.now()}`,
-        role: 'retailer' as const,
-        business_name: formData.shopName || 'Aqua Paradise Pets & Marine',
-        owner_name: formData.ownerName || 'Store Proprietor',
-        email: formData.email,
-        phone: formData.phone,
-        city: formData.city,
-        state: formData.state,
-        pincode: formData.pincode,
-        address: formData.address,
-        gstin: formData.gstin || '27AABCO8812D1Z0',
-        business_doc_url: formData.docUrl,
-        verification_status: 'approved' as const,
-        rating: 5.0,
-        review_count: 0,
-        created_at: new Date().toISOString(),
-      };
-
-      setCurrentUser(newRetailer);
-      switchRole('retailer');
-      setIsSubmitting(false);
-      setIsSuccess(true);
-
-      setTimeout(() => {
-        router.push('/retailer');
-      }, 1500);
-    }, 600);
+      router.push('/retailer');
+    }, 1500);
   };
 
   return (
@@ -116,6 +128,12 @@ export default function RegisterRetailerPage() {
             Order directly from source breeders in Kolathur, Kolkata &amp; Kochi at farm-gate wholesale prices with 100% DOA protection and pre-dispatch inspection photos.
           </p>
         </div>
+
+        {formError && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-800 text-xs flex items-center gap-3">
+            <span className="font-bold">Error:</span> {formError}
+          </div>
+        )}
 
         {isSuccess ? (
           <div className="bg-white p-8 rounded-2xl border border-sky-300 shadow-xl text-center space-y-4 animate-in fade-in zoom-in-95">
@@ -193,6 +211,34 @@ export default function RegisterRetailerPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Account Password *
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Create a secure password (min 6 characters)"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                    Confirm Password *
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Confirm password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-mono"
                   />
                 </div>
               </div>
