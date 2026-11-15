@@ -13,13 +13,16 @@ import {
   Store,
   Building2,
   ShieldCheck,
+  LogOut,
+  ChevronDown,
 } from 'lucide-react';
 import { useMarketplace } from '@/lib/store';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { currentUser, switchRole, cart, notifications, markNotificationRead } = useMarketplace();
+  const { currentUser, switchRole, signOut, cart, notifications, markNotificationRead } = useMarketplace();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showRegisterMenu, setShowRegisterMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const unreadNotifs = notifications.filter(
@@ -30,7 +33,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 bg-white">
-      {/* 1. Luxury Announcement Bar (Aura luxury-interior-59 style) */}
+      {/* 1. Luxury Announcement Bar */}
       <div className="bg-gray-900 text-gray-300 text-[11px] sm:text-xs py-2 px-4 border-b border-gray-800">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="tracking-wide text-center sm:text-left text-gray-200 font-light">
@@ -38,9 +41,9 @@ export default function Navbar() {
             <span className="font-semibold text-white">White Glove Air Cargo Delivery</span> on all wholesale orders over ₹15,000
           </p>
 
-          {/* Role switcher */}
+          {/* Role switcher for quick testing */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-gray-400 text-[10px] uppercase tracking-wider hidden md:inline">View As:</span>
+            <span className="text-gray-400 text-[10px] uppercase tracking-wider hidden md:inline">Instant Role Test:</span>
             <div className="inline-flex rounded-sm bg-gray-800 p-0.5 border border-gray-700 text-[10px]">
               <button
                 onClick={() => switchRole('visitor')}
@@ -48,7 +51,7 @@ export default function Navbar() {
                   !currentUser ? 'bg-white text-gray-900 font-semibold' : 'text-gray-300 hover:text-white'
                 }`}
               >
-                Visitor
+                Visitor (Logged Out)
               </button>
               <button
                 onClick={() => switchRole('retailer')}
@@ -79,16 +82,16 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 2. Main Luxury Header Row */}
+      {/* 2. Main Header Row */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-6">
-          {/* Left: Minimalist Search Input */}
+          {/* Left: Search Input */}
           <div className="w-1/4 hidden md:block">
             <form action="/products" method="GET" className="relative max-w-xs">
               <input
                 type="text"
                 name="q"
-                placeholder="Search..."
+                placeholder="Search species, breeders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-1.5 bg-transparent border border-gray-300 rounded-none text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 transition"
@@ -109,46 +112,18 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right: Customer Actions */}
-          <div className="w-auto md:w-1/4 flex items-center justify-end gap-5">
-            {/* Direct Dashboard Link if logged in */}
-            {currentUser?.role === 'supplier' && (
-              <Link
-                href="/supplier"
-                className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-900 hover:text-gray-600 transition tracking-wider uppercase text-[11px]"
-              >
-                <Building2 className="w-3.5 h-3.5" /> Supplier Portal
-              </Link>
-            )}
-
-            {currentUser?.role === 'retailer' && (
-              <Link
-                href="/retailer"
-                className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-900 hover:text-gray-600 transition tracking-wider uppercase text-[11px]"
-              >
-                <Store className="w-3.5 h-3.5" /> Retailer Portal
-              </Link>
-            )}
-
-            {currentUser?.role === 'admin' && (
-              <Link
-                href="/admin"
-                className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-purple-900 hover:text-purple-700 transition tracking-wider uppercase text-[11px]"
-              >
-                <ShieldCheck className="w-3.5 h-3.5" /> Admin Console
-              </Link>
-            )}
-
+          {/* Right: Auth, Cart & Notifications */}
+          <div className="w-auto md:w-auto flex items-center justify-end gap-3 sm:gap-4">
             {/* Notifications */}
             <div className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="text-gray-700 hover:text-gray-900 transition relative p-1"
+                className="text-gray-700 hover:text-gray-900 transition relative p-1.5 rounded-full hover:bg-gray-100"
                 aria-label="Notifications"
               >
                 <Bell className="w-4 h-4 stroke-[1.8]" />
                 {unreadNotifs.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gray-900 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                  <span className="absolute top-0 right-0 bg-red-600 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                     {unreadNotifs.length}
                   </span>
                 )}
@@ -157,7 +132,9 @@ export default function Navbar() {
               {showNotifications && (
                 <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-white border border-gray-200 shadow-xl py-2 z-50 animate-in fade-in">
                   <div className="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
-                    <span className="font-serif font-bold text-xs uppercase tracking-wider text-gray-900">Notifications ({unreadNotifs.length})</span>
+                    <span className="font-serif font-bold text-xs uppercase tracking-wider text-gray-900">
+                      Notifications ({unreadNotifs.length})
+                    </span>
                     <button onClick={() => setShowNotifications(false)} className="text-gray-400 hover:text-gray-600">
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -182,37 +159,115 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* User Profile / Sign In */}
-            {!currentUser ? (
-              <Link
-                href="/auth/login"
-                className="text-xs tracking-wider uppercase text-gray-900 hover:text-gray-600 font-medium flex items-center gap-1.5"
-              >
-                <User className="w-4 h-4 stroke-[1.8]" />
-                <span className="hidden sm:inline">Sign In</span>
-              </Link>
-            ) : (
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-serif font-bold tracking-wider uppercase text-gray-900 max-w-[120px] truncate">
-                  {currentUser.business_name}
-                </span>
-              </div>
-            )}
-
             {/* Shopping Cart */}
             <Link
               href="/cart"
-              className="text-gray-900 hover:text-gray-600 transition flex items-center gap-1 text-xs tracking-wider uppercase font-medium"
+              className="text-gray-900 hover:text-gray-600 transition flex items-center gap-1 text-xs tracking-wider uppercase font-medium p-1.5"
             >
               <ShoppingCart className="w-4 h-4 stroke-[1.8]" />
               <span className="hidden sm:inline">Cart</span>
-              <span className="font-mono text-xs">({cartCount})</span>
+              <span className="font-mono text-xs font-bold">({cartCount})</span>
             </Link>
+
+            {/* AUTH SECTION (PROMINENT SIGN IN / REGISTER OR LOGGED-IN CONTROLS) */}
+            {!currentUser ? (
+              <div className="flex items-center gap-2 pl-2 border-l border-gray-200">
+                {/* PROMINENT LOGIN BUTTON */}
+                <Link
+                  href="/auth/login"
+                  className="px-4 py-2 border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white text-xs font-semibold tracking-wider uppercase transition shadow-2xs"
+                >
+                  Sign In / Login
+                </Link>
+
+                {/* REGISTER DROPDOWN */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowRegisterMenu(!showRegisterMenu)}
+                    className="px-4 py-2 bg-gray-900 hover:bg-black text-white text-xs font-semibold tracking-wider uppercase transition flex items-center gap-1 shadow-2xs"
+                  >
+                    Register <ChevronDown className="w-3 h-3" />
+                  </button>
+
+                  {showRegisterMenu && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl py-2 z-50 animate-in fade-in">
+                      <Link
+                        href="/auth/register/retailer"
+                        onClick={() => setShowRegisterMenu(false)}
+                        className="block px-4 py-2 text-xs text-gray-800 hover:bg-gray-50 font-medium"
+                      >
+                        <span className="font-bold text-sky-700 block">Aquarium Retailer</span>
+                        <span className="text-[10px] text-gray-500">Source live stock at farm prices</span>
+                      </Link>
+                      <div className="border-t border-gray-100 my-1" />
+                      <Link
+                        href="/auth/register/supplier"
+                        onClick={() => setShowRegisterMenu(false)}
+                        className="block px-4 py-2 text-xs text-gray-800 hover:bg-gray-50 font-medium"
+                      >
+                        <span className="font-bold text-emerald-700 block">Breeding Farm / Supplier</span>
+                        <span className="text-[10px] text-gray-500">List live stock & receive B2B orders</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 pl-2 border-l border-gray-200">
+                {/* Portal Link */}
+                {currentUser.role === 'supplier' && (
+                  <Link
+                    href="/supplier"
+                    className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition"
+                  >
+                    <Building2 className="w-3 h-3 text-emerald-600" /> Supplier Dashboard
+                  </Link>
+                )}
+
+                {currentUser.role === 'retailer' && (
+                  <Link
+                    href="/retailer"
+                    className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 bg-sky-50 text-sky-800 border border-sky-200 hover:bg-sky-100 transition"
+                  >
+                    <Store className="w-3 h-3 text-sky-600" /> Retailer Dashboard
+                  </Link>
+                )}
+
+                {currentUser.role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 bg-purple-50 text-purple-800 border border-purple-200 hover:bg-purple-100 transition"
+                  >
+                    <ShieldCheck className="w-3 h-3 text-purple-600" /> Admin Console
+                  </Link>
+                )}
+
+                {/* Account Name */}
+                <div className="hidden lg:block text-right">
+                  <div className="text-xs font-bold text-gray-900 leading-tight truncate max-w-[140px]">
+                    {currentUser.business_name}
+                  </div>
+                  <div className="text-[9px] uppercase tracking-wider text-gray-500 font-semibold">
+                    {currentUser.role}
+                  </div>
+                </div>
+
+                {/* SIGN OUT BUTTON */}
+                <button
+                  onClick={signOut}
+                  title="Sign Out"
+                  className="px-2.5 py-1 text-[11px] tracking-wider uppercase font-semibold text-red-600 hover:bg-red-50 border border-red-200 rounded-xs transition flex items-center gap-1"
+                >
+                  <LogOut className="w-3 h-3" />
+                  <span className="hidden sm:inline">Sign Out</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* 3. Luxury Category Bar (Aura luxury-interior-59 style) */}
+      {/* 3. Category Bar */}
       <div className="border-t border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center justify-center gap-8 overflow-x-auto py-3 text-[11px] font-sans font-medium tracking-[0.18em] uppercase text-gray-700 no-scrollbar">

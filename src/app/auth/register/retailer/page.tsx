@@ -38,10 +38,31 @@ export default function RegisterRetailerPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (supabase && formData.email) {
+        await supabase.auth.signUp({
+          email: formData.email,
+          password: 'password123',
+          options: {
+            data: {
+              role: 'retailer',
+              business_name: formData.shopName,
+              owner_name: formData.ownerName,
+              phone: formData.phone,
+              city: formData.city,
+              state: formData.state,
+            },
+          },
+        });
+      }
+    } catch (err) {
+      console.warn('Supabase register notice:', err);
+    }
     setTimeout(() => {
       const newRetailer = {
         id: `ret-${Date.now()}`,

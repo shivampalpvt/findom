@@ -65,6 +65,7 @@ interface MarketplaceContextType {
     resolution: 'retailer_refund' | 'supplier_release' | 'split',
     adminNotes: string
   ) => void;
+  signOut: () => Promise<void>;
   updateUserVerification: (userId: string, status: UserProfile['verification_status']) => void;
   markNotificationRead: (id: string) => void;
 }
@@ -72,8 +73,7 @@ interface MarketplaceContextType {
 const MarketplaceContext = createContext<MarketplaceContextType | undefined>(undefined);
 
 export function MarketplaceProvider({ children }: { children: React.ReactNode }) {
-  const defaultRetailer = INITIAL_PROFILES.find((p) => p.role === 'retailer') || INITIAL_PROFILES[0];
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(defaultRetailer); // Default: Oceanic Blue (Retailer)
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null); // Start as unauthenticated visitor
   const [allProfiles, setAllProfiles] = useState<UserProfile[]>(INITIAL_PROFILES);
   const [listings, setListings] = useState<SupplierListing[]>(SUPPLIER_LISTINGS);
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
@@ -85,7 +85,7 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
   // Local storage persistence
   useEffect(() => {
     const saved = localStorage.getItem('findom_user_role');
-    if (saved === 'visitor') {
+    if (saved === 'visitor' || !saved) {
       setCurrentUser(null);
     } else if (saved === 'supplier') {
       setCurrentUser(INITIAL_PROFILES.find((p) => p.role === 'supplier') || null);
@@ -95,6 +95,19 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
       setCurrentUser(INITIAL_PROFILES.find((p) => p.role === 'admin') || null);
     }
   }, []);
+
+  const signOut = async () => {
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
+    } catch (e) {
+      // ignore
+    }
+    setCurrentUser(null);
+    localStorage.removeItem('findom_user_role');
+  };
 
   const switchRole = (role: UserRole | 'visitor') => {
     if (role === 'visitor') {
@@ -569,6 +582,7 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
         updateTicketStatus,
         resolveDispute,
         updateUserVerification,
+        signOut,
         markNotificationRead,
       }}
     >

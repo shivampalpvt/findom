@@ -43,9 +43,33 @@ export default function RegisterSupplierPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (supabase && formData.email) {
+        await supabase.auth.signUp({
+          email: formData.email,
+          password: 'password123',
+          options: {
+            data: {
+              role: 'supplier',
+              business_name: formData.businessName,
+              owner_name: formData.ownerName,
+              phone: formData.phone,
+              city: formData.city,
+              state: formData.state,
+              hub: formData.hub,
+              gstin: formData.gstin,
+            },
+          },
+        });
+      }
+    } catch (err) {
+      console.warn('Supabase supplier register notice:', err);
+    }
 
     setTimeout(() => {
       // Create user profile

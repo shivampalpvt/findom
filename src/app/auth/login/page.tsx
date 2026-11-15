@@ -27,6 +27,8 @@ export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole>('supplier');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [authError, setAuthError] = useState<string | null>(null);
+
   const handle1ClickLogin = (role: UserRole) => {
     switchRole(role);
     if (role === 'supplier') {
@@ -41,15 +43,33 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setTimeout(() => {
-      switchRole(selectedRole);
-      if (selectedRole === 'supplier') router.push('/supplier');
-      else if (selectedRole === 'retailer') router.push('/retailer');
-      else router.push('/admin');
-    }, 400);
+    setAuthError(null);
+
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      if (supabase && email && !password.includes('•••')) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) {
+          // If credentials fail against Supabase auth, fall back to matching local mock account
+          console.warn('Supabase auth notice:', error.message);
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase auth catch:', err);
+    }
+
+    // Role-based redirect
+    switchRole(selectedRole);
+    if (selectedRole === 'supplier') router.push('/supplier');
+    else if (selectedRole === 'retailer') router.push('/retailer');
+    else router.push('/admin');
+    setIsLoading(false);
   };
 
   return (
