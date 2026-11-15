@@ -234,33 +234,31 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* 3. Category Bar */}
-      <div className="border-t border-b border-gray-200">
+      {/* 3. Product Categories Bar */}
+      <div className="border-t border-b border-gray-200 bg-white shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center justify-center gap-8 overflow-x-auto py-3 text-[11px] font-sans font-medium tracking-[0.18em] uppercase text-gray-700 no-scrollbar">
-            <Link href="/products?category=discus-angelfish" className="hover:text-gray-900 shrink-0 transition">
-              Discus & Angelfish
+          <nav className="flex items-center justify-center gap-6 sm:gap-8 overflow-x-auto py-3 text-[11px] font-sans font-semibold tracking-[0.16em] uppercase text-gray-700 no-scrollbar">
+            <Link href="/products" className="hover:text-gray-900 shrink-0 transition text-gray-900 font-bold">
+              All Products
             </Link>
-            <Link href="/products?category=cichlids" className="hover:text-gray-900 shrink-0 transition">
-              Malawi Cichlids
+            <Link href="/products?category=live-fish" className="hover:text-gray-900 shrink-0 transition">
+              Live Fish
             </Link>
-            <Link href="/products?category=livebearers" className="hover:text-gray-900 shrink-0 transition">
-              Show Guppies
+            <Link href="/products?category=tanks-bowls" className="hover:text-gray-900 shrink-0 transition">
+              Tanks &amp; Bowls
             </Link>
-            <Link href="/products?category=tetras-schooling" className="hover:text-gray-900 shrink-0 transition">
-              Tetras & Schooling
+            <Link href="/products?category=fish-food" className="hover:text-gray-900 shrink-0 transition">
+              Fish Food
             </Link>
-            <Link href="/products?category=catfish-plecos" className="hover:text-gray-900 shrink-0 transition">
-              L-Plecos & Corydoras
+            <Link href="/products?category=turtle-food" className="hover:text-gray-900 shrink-0 transition">
+              Turtle Food
             </Link>
-            <Link href="/products?category=planted-shrimps" className="hover:text-gray-900 shrink-0 transition">
-              Aquascaping & Shrimps
+            <Link href="/products?category=equipment-care" className="hover:text-gray-900 shrink-0 transition text-emerald-800">
+              Equipment &amp; Care
             </Link>
+            <span className="text-gray-300 hidden sm:inline">|</span>
             <Link href="/compare" className="text-gray-900 font-bold hover:text-gray-600 shrink-0 transition">
-              Compare Suppliers
-            </Link>
-            <Link href="/suppliers" className="text-gray-500 hover:text-gray-900 shrink-0 transition">
-              Hatcheries
+              Compare Offers
             </Link>
           </nav>
         </div>

@@ -151,16 +151,16 @@ export default function HomePage() {
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
                 src="https://images.unsplash.com/photo-1544943910-4c1dc44aab44?auto=format&fit=crop&w=800&q=80"
-                alt="High-Grade Discus"
+                alt="Live Ornamental Fish"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-black/15" />
               <div className="absolute bottom-6 left-6 right-6">
                 <Link
-                  href="/products?category=discus-angelfish"
+                  href="/products?category=live-fish"
                   className="block w-full py-3 bg-white text-gray-900 text-center font-sans text-xs font-semibold tracking-[0.2em] uppercase border border-gray-200 shadow-lg hover:bg-gray-50 transition"
                 >
-                  High-Grade Discus Lots
+                  Live Fish Consignments
                 </Link>
               </div>
             </div>
@@ -168,17 +168,17 @@ export default function HomePage() {
             {/* Deal Card 2 */}
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=800&q=80"
-                alt="Living Room Furniture"
+                src="https://images.unsplash.com/photo-1584282676052-19e3c907b278?auto=format&fit=crop&w=800&q=80"
+                alt="Equipment and Water Care"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-black/15" />
               <div className="absolute bottom-6 left-6 right-6">
                 <Link
-                  href="/products?category=cichlids"
+                  href="/products?category=equipment-care"
                   className="block w-full py-3 bg-white text-gray-900 text-center font-sans text-xs font-semibold tracking-[0.2em] uppercase border border-gray-200 shadow-lg hover:bg-gray-50 transition"
                 >
-                  Malawi Cichlid Colonies
+                  Equipment &amp; Water Care
                 </Link>
               </div>
             </div>
@@ -186,17 +186,17 @@ export default function HomePage() {
             {/* Deal Card 3 */}
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1584282676052-19e3c907b278?auto=format&fit=crop&w=800&q=80"
-                alt="Lighting"
+                src="https://images.unsplash.com/photo-1520315342629-6ea920342047?auto=format&fit=crop&w=800&q=80"
+                alt="Tanks and Glass Bowls"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-black/15" />
               <div className="absolute bottom-6 left-6 right-6">
                 <Link
-                  href="/products?category=catfish-plecos"
+                  href="/products?category=tanks-bowls"
                   className="block w-full py-3 bg-white text-gray-900 text-center font-sans text-xs font-semibold tracking-[0.2em] uppercase border border-gray-200 shadow-lg hover:bg-gray-50 transition"
                 >
-                  Exotic Plecos under ₹15,000
+                  Tanks &amp; Glass Bowls
                 </Link>
               </div>
             </div>

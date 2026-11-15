@@ -19,9 +19,49 @@ import {
   Package,
   Layers,
   Sparkles,
+  Tag,
+  Fish,
+  Waves,
+  Feather,
 } from 'lucide-react';
 import { useMarketplace } from '@/lib/store';
 import { CATEGORIES } from '@/lib/mock-data';
+
+const CATEGORY_SUB_VARIETIES: Record<string, { label: string; query: string }[]> = {
+  'live-fish': [
+    { label: 'All Live Fish', query: 'all' },
+    { label: 'Discus Fish', query: 'discus' },
+    { label: 'Exotic Guppies', query: 'guppy' },
+    { label: 'Tetras & Schooling', query: 'tetra' },
+    { label: 'Lake Malawi Cichlids', query: 'cichlid' },
+    { label: 'L-Number Plecos', query: 'pleco' },
+  ],
+  'tanks-bowls': [
+    { label: 'All Tanks & Bowls', query: 'all' },
+    { label: 'Rimless Opti-White Tanks', query: 'rimless' },
+    { label: 'Curved Glass Bowls', query: 'bowl' },
+    { label: 'Commercial Breeder Tubs', query: 'tub' },
+  ],
+  'fish-food': [
+    { label: 'All Fish Food', query: 'all' },
+    { label: 'Discus Bio-Gold Granules', query: 'granules' },
+    { label: 'TetraBits Color Pellets', query: 'pellets' },
+    { label: 'Freeze-Dried Bloodworms', query: 'bloodworms' },
+  ],
+  'turtle-food': [
+    { label: 'All Turtle Food', query: 'all' },
+    { label: 'Floating Turtle Sticks', query: 'sticks' },
+    { label: 'Sun-Dried Gammarus Shrimp', query: 'gammarus' },
+  ],
+  'equipment-care': [
+    { label: 'All Equipment & Care', query: 'all' },
+    { label: 'HOB Filters (Hang-on-Back)', query: 'hob' },
+    { label: 'Oxygen Air Pumps', query: 'oxygen' },
+    { label: 'Bio-Sponges', query: 'sponge' },
+    { label: 'Anti-Chlorine Treatments', query: 'chlorine' },
+    { label: 'Water Conditioners', query: 'conditioner' },
+  ],
+};
 
 function ProductsCatalogContent() {
   const searchParams = useSearchParams();
@@ -34,7 +74,7 @@ function ProductsCatalogContent() {
   // Filter States
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [selectedWaterType, setSelectedWaterType] = useState('all');
+  const [selectedVariety, setSelectedVariety] = useState('all');
   const [selectedLocation, setSelectedLocation] = useState('all');
   const [selectedSupplier, setSelectedSupplier] = useState(initialSupplier);
   const [sortBy, setSortBy] = useState<'price-asc' | 'price-desc' | 'rating-desc' | 'moq-asc' | 'stock-desc'>('price-asc');
@@ -52,6 +92,12 @@ function ProductsCatalogContent() {
     });
     return Array.from(locs).sort();
   }, [listings]);
+
+  // Handle category switch
+  const handleCategorySelect = (slug: string) => {
+    setSelectedCategory(slug);
+    setSelectedVariety('all'); // reset sub-variety filter on category change
+  };
 
   // Filter and sort listings
   const filteredListings = useMemo(() => {
@@ -78,9 +124,13 @@ function ProductsCatalogContent() {
           }
         }
 
-        // Water type filter
-        if (selectedWaterType !== 'all') {
-          if (item.product?.water_type !== selectedWaterType) {
+        // Variety / Sub-product filter
+        if (selectedVariety !== 'all') {
+          const v = selectedVariety.toLowerCase();
+          const matchVariety = item.variety.toLowerCase().includes(v);
+          const matchName = item.product?.common_name.toLowerCase().includes(v);
+          const matchDesc = item.product?.description.toLowerCase().includes(v);
+          if (!matchVariety && !matchName && !matchDesc) {
             return false;
           }
         }
@@ -109,7 +159,7 @@ function ProductsCatalogContent() {
         if (sortBy === 'stock-desc') return b.available_qty - a.available_qty;
         return 0;
       });
-  }, [listings, searchQuery, selectedCategory, selectedWaterType, selectedLocation, selectedSupplier, sortBy]);
+  }, [listings, searchQuery, selectedCategory, selectedVariety, selectedLocation, selectedSupplier, sortBy]);
 
   const handleQtyChange = (listingId: string, value: number, moq: number, max: number) => {
     const validVal = Math.max(moq, Math.min(value, max));
@@ -128,11 +178,18 @@ function ProductsCatalogContent() {
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory('all');
-    setSelectedWaterType('all');
+    setSelectedVariety('all');
     setSelectedLocation('all');
     setSelectedSupplier('all');
     setSortBy('price-asc');
   };
+
+  // Active category display title
+  const activeCategoryTitle = useMemo(() => {
+    if (selectedCategory === 'all') return 'Wholesale Aquatic & Pet Store Catalog';
+    const found = CATEGORIES.find((c) => c.slug === selectedCategory);
+    return found ? `${found.name} Wholesale Catalog` : 'Wholesale Catalog';
+  }, [selectedCategory]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -144,7 +201,7 @@ function ProductsCatalogContent() {
           </div>
           <div>
             <p className="text-sm font-semibold text-white">Wholesale Lot Added</p>
-            <p className="text-xs text-slate-300">Item placed into your supplier grouped cart.</p>
+            <p className="text-xs text-slate-300">Item placed into your supplier-grouped cart.</p>
           </div>
           <Link
             href="/cart"
@@ -161,13 +218,13 @@ function ProductsCatalogContent() {
           <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
             <Link href="/" className="hover:text-slate-900">Marketplace</Link>
             <span>/</span>
-            <span className="text-slate-900 font-semibold">Wholesale Aquatic Catalog</span>
+            <span className="text-slate-900 font-semibold">{activeCategoryTitle}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Live Fish Wholesale Catalog
+            {activeCategoryTitle}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Real-time direct pricing from certified Indian hatcheries. All shipments include 24h air-cargo DOA coverage.
+            Source live fish, glass tanks, turtle &amp; fish foods, HOB filters, oxygen pumps, and water conditioners directly from verified Indian distributors.
           </p>
         </div>
 
@@ -181,6 +238,68 @@ function ProductsCatalogContent() {
             Compare Breeder Offers
           </Link>
         </div>
+      </div>
+
+      {/* 1. TOP CATEGORY SELECTION BAR */}
+      <div className="mt-6 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <button
+            onClick={() => handleCategorySelect('all')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shrink-0 transition ${
+              selectedCategory === 'all'
+                ? 'bg-slate-900 text-white shadow-xs'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            All Products ({listings.length})
+          </button>
+          {CATEGORIES.map((cat) => {
+            const count = listings.filter((l) => l.product?.category_id === cat.id).length;
+            const isSelected = selectedCategory === cat.slug;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleCategorySelect(cat.slug)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shrink-0 transition flex items-center gap-2 ${
+                  isSelected
+                    ? 'bg-brand-600 text-white shadow-xs'
+                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                <span>{cat.name}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* 2. SUB-VARIETY / SUB-PRODUCT PILLS BAR (Category specific) */}
+        {selectedCategory !== 'all' && CATEGORY_SUB_VARIETIES[selectedCategory] && (
+          <div className="mt-3 pt-3 border-t border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
+              <Tag className="w-3 h-3 text-slate-400" />
+              Filter Variety:
+            </span>
+            {CATEGORY_SUB_VARIETIES[selectedCategory].map((sub) => {
+              const isActive = selectedVariety === sub.query;
+              return (
+                <button
+                  key={sub.query}
+                  onClick={() => setSelectedVariety(sub.query)}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium shrink-0 transition ${
+                    isActive
+                      ? 'bg-brand-100 text-brand-900 font-bold border border-brand-300'
+                      : 'bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200/80'
+                  }`}
+                >
+                  {sub.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Layout Grid: Sidebar Filters & Main Results */}
@@ -208,7 +327,7 @@ function ProductsCatalogContent() {
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
               <Filter className="w-4 h-4 text-brand-600" />
-              Filter Stock
+              Filter Catalog
             </h3>
             <button
               onClick={resetFilters}
@@ -222,13 +341,13 @@ function ProductsCatalogContent() {
           {/* Search Input in Sidebar */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
-              Search Species or Farm
+              Search Products &amp; Brands
             </label>
             <div className="relative">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
-                placeholder="Discus, Guppy, Kolathur..."
+                placeholder="Discus, HOB filter, Anti-chlorine..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white"
@@ -239,11 +358,11 @@ function ProductsCatalogContent() {
           {/* Category Filter */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
-              Category
+              Product Category
             </label>
-            <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+            <div className="space-y-1 max-h-56 overflow-y-auto pr-1">
               <button
-                onClick={() => setSelectedCategory('all')}
+                onClick={() => handleCategorySelect('all')}
                 className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg font-medium transition ${
                   selectedCategory === 'all'
                     ? 'bg-brand-50 text-brand-700 font-bold'
@@ -257,7 +376,7 @@ function ProductsCatalogContent() {
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.slug)}
+                    onClick={() => handleCategorySelect(cat.slug)}
                     className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg font-medium flex items-center justify-between transition ${
                       selectedCategory === cat.slug
                         ? 'bg-brand-50 text-brand-700 font-bold'
@@ -272,36 +391,34 @@ function ProductsCatalogContent() {
             </div>
           </div>
 
-          {/* Water Type Filter */}
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
-              Water Type
-            </label>
-            <div className="grid grid-cols-2 gap-1.5">
-              {[
-                { label: 'All', value: 'all' },
-                { label: 'Freshwater', value: 'Freshwater' },
-                { label: 'Marine Reef', value: 'Marine' },
-              ].map((wt) => (
-                <button
-                  key={wt.value}
-                  onClick={() => setSelectedWaterType(wt.value)}
-                  className={`px-3 py-1.5 text-xs rounded-lg font-medium border text-center transition ${
-                    selectedWaterType === wt.value
-                      ? 'bg-brand-600 border-brand-600 text-white font-bold'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  {wt.label}
-                </button>
-              ))}
+          {/* Sub-Variety Selector in Sidebar */}
+          {selectedCategory !== 'all' && CATEGORY_SUB_VARIETIES[selectedCategory] && (
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
+                Specific Item / Variety
+              </label>
+              <div className="space-y-1">
+                {CATEGORY_SUB_VARIETIES[selectedCategory].map((sub) => (
+                  <button
+                    key={sub.query}
+                    onClick={() => setSelectedVariety(sub.query)}
+                    className={`w-full text-left px-2.5 py-1.5 text-xs rounded-lg font-medium transition ${
+                      selectedVariety === sub.query
+                        ? 'bg-brand-50 text-brand-700 font-bold'
+                        : 'text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {sub.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Location / Breeding Hub Filter */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
-              Hatchery Location
+              Supplier Location / Hub
             </label>
             <div className="space-y-1">
               <button
@@ -312,7 +429,7 @@ function ProductsCatalogContent() {
                     : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                All Breeding Hubs
+                All Wholesale Hubs
               </button>
               {availableLocations.map((loc) => {
                 const count = listings.filter((l) => l.location_city === loc).length;
@@ -344,7 +461,7 @@ function ProductsCatalogContent() {
               100% Escrow Protection
             </div>
             <p className="leading-relaxed">
-              Payments released to breeders only after 2-hour post-flight delivery inspection confirmation.
+              Payments released to breeders &amp; suppliers only after delivery inspection sign-off.
             </p>
           </div>
         </aside>
@@ -354,216 +471,208 @@ function ProductsCatalogContent() {
           {/* Top Control Bar: Total Count & Sort Dropdown */}
           <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-xs mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="text-xs text-slate-600">
-              Showing <span className="font-bold text-slate-900">{filteredListings.length}</span> wholesale lots ready for air-cargo dispatch
+              Showing <span className="font-bold text-slate-900">{filteredListings.length}</span> wholesale products available for commercial ordering
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs text-slate-500 font-medium shrink-0 flex items-center gap-1">
+              <span className="text-xs text-slate-400 flex items-center gap-1 shrink-0">
                 <ArrowUpDown className="w-3.5 h-3.5" />
-                Sort By:
+                Sort:
               </span>
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 py-1.5 px-3 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                onChange={(e: any) => setSortBy(e.target.value)}
+                className="text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 w-full sm:w-auto"
               >
-                <option value="price-asc">Lowest Price (₹ / unit)</option>
-                <option value="price-desc">Highest Price (₹ / unit)</option>
-                <option value="rating-desc">Breeder Rating (Highest)</option>
-                <option value="moq-asc">Minimum Order Qty (Lowest MOQ)</option>
-                <option value="stock-desc">Available Stock (Highest)</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating-desc">Highest Supplier Rating</option>
+                <option value="moq-asc">Lowest Minimum Order (MOQ)</option>
+                <option value="stock-desc">Available Stock Quantity</option>
               </select>
             </div>
           </div>
 
           {/* Empty State */}
           {filteredListings.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-dashed border-slate-300 p-12 text-center">
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
-                <Package className="w-7 h-7" />
+            <div className="bg-white rounded-2xl border border-slate-200/90 p-12 text-center shadow-xs">
+              <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                <Package className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-slate-800">No matching wholesale listings found</h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                Try adjusting your search keywords, clear category selections, or select all breeding locations.
+              <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-5">
+                We couldn&apos;t find products matching your current category or search filters. Try clearing filters or searching for alternative species.
               </p>
               <button
                 onClick={resetFilters}
-                className="mt-4 px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-500 transition"
+                className="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition"
               >
-                Reset All Filters
+                Clear All Filters
               </button>
             </div>
           ) : (
-            /* Product Grid */
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            /* Product Listings Grid */
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredListings.map((item) => {
                 const currentQty = quantities[item.id] || item.min_order_qty;
-                const hasMultipleOffers = listings.filter((l) => l.product_id === item.product_id).length > 1;
+                const totalItemCost = currentQty * item.price_per_unit;
 
                 return (
                   <div
                     key={item.id}
-                    className="flex flex-col bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg transition overflow-hidden group"
+                    className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group"
                   >
-                    {/* Visual Media Header */}
-                    <div className="relative aspect-16/10 bg-slate-100 overflow-hidden">
-                      <img
-                        src={item.images[0]}
-                        alt={item.variety}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                        loading="lazy"
-                      />
-
-                      {/* MOQ Badge */}
-                      <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
-                        <span className="px-2 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-xs text-white text-[11px] font-bold">
-                          MOQ: {item.min_order_qty} pcs
-                        </span>
-                      </div>
-
-                      {/* Water Type / Status Badge */}
-                      <div className="absolute top-2.5 right-2.5 flex items-center gap-1">
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-bold flex items-center gap-1 shadow-xs">
-                          <ShieldCheck className="w-3 h-3" />
-                          DOA Insured
-                        </span>
-                      </div>
-
-                      {/* Size Grade Strip */}
-                      <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[11px] text-white">
-                        <span className="font-semibold bg-slate-900/70 backdrop-blur-xs px-2 py-0.5 rounded">
-                          {item.size_grade}
-                        </span>
-                        <span className="text-[10px] bg-brand-600/90 backdrop-blur-xs px-1.5 py-0.5 rounded font-bold">
-                          {item.product?.water_type}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Card Body */}
-                    <div className="p-4 flex-1 flex flex-col justify-between">
-                      <div>
-                        {/* Title and Price */}
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <h3 className="font-bold text-sm text-slate-900 group-hover:text-brand-600 transition line-clamp-1">
-                              {item.product?.common_name || item.variety}
-                            </h3>
-                            <p className="text-[11px] text-slate-500 italic mt-0.5 line-clamp-1">
-                              {item.product?.scientific_name}
-                            </p>
-                          </div>
-                          <div className="text-right shrink-0">
-                            <span className="text-base font-black text-slate-900">
-                              ₹{item.price_per_unit.toLocaleString('en-IN')}
-                            </span>
-                            <span className="text-[10px] text-slate-400 block font-medium">/ piece</span>
-                          </div>
+                    <div>
+                      {/* Product Image & Badges */}
+                      <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+                        <img
+                          src={item.images[0] || item.product?.default_image}
+                          alt={item.product?.common_name || 'Product'}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-900/80 text-white backdrop-blur-xs">
+                            MOQ: {item.min_order_qty} units
+                          </span>
                         </div>
+                        <div className="absolute top-2.5 right-2.5">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-white/90 text-slate-900 shadow-xs backdrop-blur-xs">
+                            {item.available_qty} in stock
+                          </span>
+                        </div>
+                      </div>
 
-                        {/* Variety and Stock */}
-                        <div className="mt-2.5 flex items-center gap-2 text-xs">
-                          <span className="font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
+                      {/* Content Body */}
+                      <div className="p-4 space-y-2.5">
+                        {/* Title and Variety */}
+                        <div>
+                          <h3 className="font-bold text-sm text-slate-900 group-hover:text-brand-600 transition line-clamp-1">
+                            {item.product?.common_name}
+                          </h3>
+                          <p className="text-[11px] text-slate-500 italic font-serif line-clamp-1">
                             {item.variety}
-                          </span>
-                          <span className="text-emerald-700 font-bold text-[11px]">
-                            {item.available_qty.toLocaleString('en-IN')} ready
-                          </span>
+                          </p>
                         </div>
 
-                        {/* Supplier Info */}
-                        <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-700">
-                              {item.supplier?.business_name.substring(0, 1)}
-                            </div>
-                            <div>
-                              <p className="font-semibold text-slate-800 line-clamp-1 text-xs">
-                                {item.supplier?.business_name}
-                              </p>
-                              <p className="text-[10px] text-slate-500 flex items-center gap-1">
-                                <MapPin className="w-3 h-3 text-slate-400" />
-                                {item.location_city}, {item.location_state}
-                              </p>
-                            </div>
+                        {/* Specifications */}
+                        <div className="bg-slate-50 p-2.5 rounded-xl text-[11px] space-y-1 text-slate-600">
+                          <div className="flex justify-between">
+                            <span className="text-slate-400">Spec / Grade:</span>
+                            <span className="font-medium text-slate-800">{item.size_grade}</span>
                           </div>
-
-                          <div className="flex items-center gap-1 text-amber-500 font-bold text-xs shrink-0">
-                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                            <span>{item.supplier?.rating || 4.8}</span>
+                          <div className="flex justify-between">
+                            <span className="text-slate-400">Supplier:</span>
+                            <span className="font-semibold text-slate-900 truncate max-w-[140px]">
+                              {item.supplier?.business_name}
+                            </span>
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Quantity & Actions */}
-                      <div className="mt-4 pt-3 border-t border-slate-100 space-y-2.5">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-xs text-slate-500 font-medium">Order Quantity:</span>
-                          <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
-                            <button
-                              onClick={() =>
-                                handleQtyChange(
-                                  item.id,
-                                  currentQty - (item.min_order_qty >= 10 ? 5 : 1),
-                                  item.min_order_qty,
-                                  item.available_qty
-                                )
-                              }
-                              className="px-2.5 py-1 text-xs font-bold text-slate-600 hover:bg-slate-200 transition"
-                            >
-                              -
-                            </button>
-                            <input
-                              type="number"
-                              min={item.min_order_qty}
-                              max={item.available_qty}
-                              value={currentQty}
-                              onChange={(e) =>
-                                handleQtyChange(
-                                  item.id,
-                                  parseInt(e.target.value) || item.min_order_qty,
-                                  item.min_order_qty,
-                                  item.available_qty
-                                )
-                              }
-                              className="w-14 text-center bg-transparent text-xs font-bold text-slate-900 focus:outline-none"
-                            />
-                            <button
-                              onClick={() =>
-                                handleQtyChange(
-                                  item.id,
-                                  currentQty + (item.min_order_qty >= 10 ? 5 : 1),
-                                  item.min_order_qty,
-                                  item.available_qty
-                                )
-                              }
-                              className="px-2.5 py-1 text-xs font-bold text-slate-600 hover:bg-slate-200 transition"
-                            >
-                              +
-                            </button>
+                          <div className="flex justify-between items-center">
+                            <span className="text-slate-400 flex items-center gap-0.5">
+                              <MapPin className="w-2.5 h-2.5" /> Hub:
+                            </span>
+                            <span className="text-slate-700">{item.location_city}, {item.location_state}</span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleAddToCart(item)}
-                            className="flex-1 py-2 px-3 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
-                          >
-                            <ShoppingCart className="w-3.5 h-3.5" />
-                            Add ₹{(item.price_per_unit * currentQty).toLocaleString('en-IN')}
-                          </button>
+                        {/* Supplier Rating */}
+                        <div className="flex items-center justify-between text-xs pt-1">
+                          <div className="flex items-center gap-1 text-amber-600 font-bold">
+                            <Star className="w-3.5 h-3.5 fill-amber-500 stroke-none" />
+                            <span>{item.supplier?.rating?.toFixed(1) || '5.0'}</span>
+                            <span className="text-slate-400 text-[10px] font-normal">
+                              ({item.supplier?.review_count || 12} reviews)
+                            </span>
+                          </div>
 
-                          {hasMultipleOffers && item.product?.slug && (
+                          {/* Compare Link */}
+                          {item.product && (
                             <Link
                               href={`/compare/${item.product.slug}`}
-                              className="py-2 px-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition flex items-center gap-1 shrink-0"
-                              title="Compare other breeder offers"
+                              className="text-[11px] font-semibold text-brand-600 hover:text-brand-700 hover:underline flex items-center gap-1"
                             >
-                              <SlidersHorizontal className="w-3.5 h-3.5 text-brand-600" />
-                              Compare
+                              Compare Offers &gt;
                             </Link>
                           )}
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Pricing & Cart Actions Footer */}
+                    <div className="p-4 pt-0 border-t border-slate-100 mt-2 space-y-3">
+                      <div className="flex items-baseline justify-between pt-3">
+                        <div>
+                          <span className="text-lg font-black text-slate-900 font-mono">
+                            ₹{item.price_per_unit.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-[10px] text-slate-400 ml-1">/ unit</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-[10px] text-slate-400 block">Total ({currentQty}x)</span>
+                          <span className="text-xs font-bold text-slate-800 font-mono">
+                            ₹{totalItemCost.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Quantity & Add to Cart Controls */}
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center border border-slate-200 rounded-xl bg-slate-50 text-xs w-28 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleQtyChange(
+                                item.id,
+                                currentQty - item.min_order_qty,
+                                item.min_order_qty,
+                                item.available_qty
+                              )
+                            }
+                            disabled={currentQty <= item.min_order_qty}
+                            className="px-2.5 py-2 hover:bg-slate-200 rounded-l-xl text-slate-600 font-bold disabled:opacity-30 disabled:hover:bg-transparent"
+                          >
+                            -
+                          </button>
+                          <input
+                            type="number"
+                            value={currentQty}
+                            min={item.min_order_qty}
+                            max={item.available_qty}
+                            step={item.min_order_qty}
+                            onChange={(e) =>
+                              handleQtyChange(
+                                item.id,
+                                parseInt(e.target.value) || item.min_order_qty,
+                                item.min_order_qty,
+                                item.available_qty
+                              )
+                            }
+                            className="w-full text-center bg-transparent focus:outline-none font-bold text-slate-900"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleQtyChange(
+                                item.id,
+                                currentQty + item.min_order_qty,
+                                item.min_order_qty,
+                                item.available_qty
+                              )
+                            }
+                            disabled={currentQty >= item.available_qty}
+                            className="px-2.5 py-2 hover:bg-slate-200 rounded-r-xl text-slate-600 font-bold disabled:opacity-30 disabled:hover:bg-transparent"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleAddToCart(item)}
+                          className="flex-1 py-2 px-3 bg-slate-900 hover:bg-brand-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
+                        >
+                          <ShoppingCart className="w-3.5 h-3.5" />
+                          Add to Cart
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -577,12 +686,12 @@ function ProductsCatalogContent() {
   );
 }
 
-export default function ProductsPage() {
+export default function ProductsCatalogPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center text-slate-500 text-sm">
-          Loading aquatic wholesale catalog...
+        <div className="min-h-screen flex items-center justify-center text-xs text-slate-400">
+          Loading Findom Wholesale Catalog...
         </div>
       }
     >
