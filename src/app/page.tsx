@@ -168,7 +168,7 @@ export default function HomePage() {
             {/* Deal Card 2 */}
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80"
+                src="/products/bio-sponge-filter.jpg"
                 alt="Equipment and Water Care"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
@@ -186,7 +186,7 @@ export default function HomePage() {
             {/* Deal Card 3 */}
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80"
+                src="/products/rimless-aquarium-tank.jpg"
                 alt="Tanks and Glass Bowls"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
