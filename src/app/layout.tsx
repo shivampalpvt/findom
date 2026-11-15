@@ -1,13 +1,26 @@
 import type { Metadata } from 'next';
+import { Playfair_Display, Inter } from 'next/font/google';
 import './globals.css';
 import { MarketplaceProvider } from '@/lib/store';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Findom: India’s Premier B2B Fish Marketplace',
+  title: 'Findom Atelier: India’s Premier Luxury B2B Fish Marketplace',
   description:
-    'Direct B2B wholesale platform connecting Indian ornamental fish breeders and suppliers with verified aquarium retail stores. Features pre-dispatch photo verification and DOA protection.',
+    'Curated wholesale marketplace connecting India’s master ornamental fish breeders with certified aquarium retail stores. White-glove air cargo delivery and pre-dispatch photo verification.',
 };
 
 export default function RootLayout({
@@ -16,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased">
+    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+      <body className="min-h-screen flex flex-col bg-white text-gray-900 font-sans antialiased selection:bg-gray-900 selection:text-white">
         <MarketplaceProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
