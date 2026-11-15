@@ -48,13 +48,13 @@ export default function AdminOrdersPage() {
         return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">New Order</span>;
       case 'accepted':
       case 'preparing':
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Preparing Cargo</span>;
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200">Preparing Order</span>;
       case 'photos_uploaded':
         return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">Photos Uploaded</span>;
       case 'photos_approved':
         return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">Photos Approved</span>;
       case 'dispatched':
-        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">In Air Cargo</span>;
+        return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">In Local Transit (Porter)</span>;
       case 'delivered':
       case 'completed':
         return <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300">Completed (Escrow Released)</span>;

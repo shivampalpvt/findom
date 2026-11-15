@@ -260,14 +260,14 @@ export default function AdminDashboard() {
                 icon: CheckCircle2,
                 color: 'text-emerald-600 bg-emerald-50',
                 title: 'Escrow Payout Disbursed for Order #FD-2026-7643',
-                desc: '₹4,250 released to Hooghly Ornamental Hatchery upon 0 DOA confirmation.',
+                desc: '₹4,250 released to Western Ghats & Mumbai Aqua Hub upon 0 DOA confirmation.',
                 time: '3 hours ago',
               },
               {
                 icon: Users,
                 color: 'text-blue-600 bg-blue-50',
                 title: 'New Hatchery Registration Submitted',
-                desc: 'Godavari Bio-Aqua Hatcheries (Rajahmundry) uploaded commercial fisheries license.',
+                desc: 'Ghatkopar Aqua World & Hatcheries (Mumbai) uploaded commercial fisheries license.',
                 time: '5 hours ago',
               },
             ].map((ev, i) => {

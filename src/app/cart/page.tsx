@@ -8,7 +8,7 @@ import {
   Trash2,
   Building2,
   MapPin,
-  Plane,
+  Truck,
   ShieldCheck,
   ArrowRight,
   AlertCircle,
@@ -17,6 +17,7 @@ import {
   Plus,
   Minus,
   Info,
+  Clock,
   ChevronRight,
   Fish,
 } from 'lucide-react';
@@ -306,16 +307,16 @@ export default function CartPage() {
                 {/* Supplier Subtotal & Freight Strip */}
                 <div className="bg-slate-50 border-t border-slate-200 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                   <div className="flex items-center gap-2 text-slate-600">
-                    <Plane className="w-4 h-4 text-brand-600 shrink-0" />
+                    <Truck className="w-4 h-4 text-brand-600 shrink-0" />
                     <span>
-                      Air Cargo Freight ({group.supplier?.city} Hub):{' '}
+                      Local Porter Delivery ({group.supplier?.city} Metro):{' '}
                       {group.shippingFee === 0 ? (
-                        <span className="font-bold text-emerald-700">FREE (Order &gt; ₹15,000)</span>
+                        <span className="font-bold text-emerald-700">FREE (Order &gt; ₹4,999)</span>
                       ) : (
                         <span className="font-bold text-slate-800">
                           ₹{group.shippingFee.toLocaleString('en-IN')}{' '}
                           <span className="font-normal text-slate-400">
-                            (Insulated box + medical O2)
+                            (Express 1-hour bike/tempo dispatch)
                           </span>
                         </span>
                       )}
@@ -415,12 +416,12 @@ export default function CartPage() {
                   <span>Pre-Dispatch Photo Approval Mandated</span>
                 </div>
                 <div className="flex items-center gap-2 text-sky-700 font-semibold">
-                  <Plane className="w-4 h-4 shrink-0 text-sky-600" />
-                  <span>24-Hour Domestic Air Cargo Guarantee</span>
+                  <Clock className="w-4 h-4 shrink-0 text-sky-600" />
+                  <span>1-Hour Local Porter Delivery Guarantee</span>
                 </div>
                 <div className="flex items-center gap-2 text-purple-700 font-semibold">
                   <CheckCircle2 className="w-4 h-4 shrink-0 text-purple-600" />
-                  <span>DOA Claim Guarantee within 2 Hours of Airport Pickup</span>
+                  <span>DOA Claim Guarantee upon Store Doorstep Handover</span>
                 </div>
               </div>
             </div>

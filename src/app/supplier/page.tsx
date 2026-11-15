@@ -395,7 +395,7 @@ export default function SupplierDashboard() {
                                 href={`/supplier/orders/${order.id}`}
                                 className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-xs shadow-2xs transition flex items-center gap-1"
                               >
-                                <Truck className="w-3 h-3" /> Dispatch Air Cargo
+                                <Truck className="w-3 h-3" /> Dispatch via Porter
                               </Link>
                             )}
 
@@ -447,7 +447,7 @@ export default function SupplierDashboard() {
           >
             <div>
               <h4 className="font-bold text-slate-900 group-hover:text-brand-600 transition">Live Market Price Index</h4>
-              <p className="text-xs text-slate-500">Check current wholesale prices across Kolathur & Kolkata</p>
+              <p className="text-xs text-slate-500">Check current wholesale prices across Mumbai &amp; MMR hatcheries</p>
             </div>
             <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-0.5 transition" />
           </Link>

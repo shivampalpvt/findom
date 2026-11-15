@@ -79,7 +79,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed mb-8">
-              Elevate your retail collection with our exclusive portfolio of globally certified, domestic-bred aquatic masterworks. Direct from India's premier hatcheries in Kolathur, Galiff Street, and Kochi.
+              Elevate your retail collection with verified live fish, rimless tanks, high-grade foods, and filtration equipment. Direct from premier hatcheries and wholesale distributors across Mumbai Metro with guaranteed 1-hour Porter delivery.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3">
@@ -118,9 +118,9 @@ export default function HomePage() {
             </div>
             <div className="py-2 px-4">
               <p className="font-serif text-sm sm:text-base text-gray-900 font-medium">
-                Zero DOA Risk + Free Air Cargo
+                Zero DOA Risk + Free 1-Hour Porter Delivery
               </p>
-              <p className="text-[11px] text-gray-500 tracking-wider uppercase mt-0.5">On all wholesale consignments over ₹15,000</p>
+              <p className="text-[11px] text-gray-500 tracking-wider uppercase mt-0.5">On all wholesale consignments over ₹4,999 in Mumbai Metro</p>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function HomePage() {
             {/* Deal Card 2 */}
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1584282676052-19e3c907b278?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80"
                 alt="Equipment and Water Care"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
@@ -186,7 +186,7 @@ export default function HomePage() {
             {/* Deal Card 3 */}
             <div className="relative group overflow-hidden bg-gray-100 aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1520315342629-6ea920342047?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1546842931-886c185b4c8c?auto=format&fit=crop&w=800&q=80"
                 alt="Tanks and Glass Bowls"
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />

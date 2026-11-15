@@ -62,7 +62,7 @@ export default function CompareLandingPage() {
             </h1>
 
             <p className="mt-4 text-base text-slate-300 leading-relaxed">
-              Wholesale pricing, grading, and minimum order quantities vary wildly between Kolathur (Chennai), Galiff Street (Kolkata), and Kochi breeders. Select a fish species to inspect side-by-side offers and optimize your store’s profit margins.
+              Wholesale pricing, grading, and minimum order quantities vary across Mumbai and MMR breeders (Andheri, Bandra, Thane, Navi Mumbai, and Dadar). Select a product to inspect side-by-side offers and optimize your store’s profit margins.
             </p>
 
             {/* Quick Benefits Strip */}

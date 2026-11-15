@@ -125,7 +125,7 @@ export default function RegisterRetailerPage() {
             Register Aquarium Retail Shop
           </h1>
           <p className="text-xs text-slate-500 mt-1 max-w-xl mx-auto">
-            Order directly from source breeders in Kolathur, Kolkata &amp; Kochi at farm-gate wholesale prices with 100% DOA protection and pre-dispatch inspection photos.
+            Order directly from verified breeders and wholesale distributors across Mumbai &amp; MMR with 1-hour Porter delivery, 100% DOA protection, and pre-dispatch inspection photos.
           </p>
         </div>
 

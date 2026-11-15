@@ -666,10 +666,10 @@ export default function CheckoutPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-slate-600">
-                  <span>Domestic Air Cargo Fee:</span>
+                  <span>Local Porter Delivery Fee:</span>
                   <span className="font-semibold text-slate-900">
                     {grandShipping === 0 ? (
-                      <span className="text-emerald-700 font-bold">FREE</span>
+                      <span className="text-emerald-700 font-bold">FREE (&gt;₹4,999)</span>
                     ) : (
                       `₹${grandShipping.toLocaleString('en-IN')}`
                     )}

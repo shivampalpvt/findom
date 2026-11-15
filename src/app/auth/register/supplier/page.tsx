@@ -30,11 +30,11 @@ export default function RegisterSupplierPage() {
     password: '',
     confirmPassword: '',
     phone: '',
-    city: 'Chennai',
-    state: 'Tamil Nadu',
+    city: 'Mumbai',
+    state: 'Maharashtra',
     pincode: '',
     address: '',
-    hub: 'Kolathur Aquarium Hub, Chennai',
+    hub: 'Andheri West Aqua Wholesale Hub, Mumbai',
     gstin: '',
     tankCount: '50-100 Breeding Tanks',
     bankAccount: '',
@@ -272,12 +272,12 @@ export default function RegisterSupplierPage() {
                     onChange={(e) => setFormData({ ...formData, hub: e.target.value })}
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                   >
-                    <option value="Kolathur Aquarium Hub, Chennai">Kolathur Ornamental Fish Hub (Chennai, Tamil Nadu)</option>
-                    <option value="Galiff Street Exotic Fish Center, Kolkata">Galiff Street / Howrah Exotic Fish Hub (Kolkata, WB)</option>
-                    <option value="Kochi Aluva Aquatic Gateway, Kerala">Aluva & Ernakulam Riverine Aquaculture (Kochi, Kerala)</option>
-                    <option value="Andhra Godavari Delta Zone">Godavari Delta Breeding Zone (Rajahmundry / Kovvur, AP)</option>
-                    <option value="Bengaluru Urban & Rural Aquaculture">Bengaluru Bio-Aquaculture Zone (Karnataka)</option>
-                    <option value="North East Ornamental Gateway, Guwahati">Assam & NE Native Ornamental Gateway (Guwahati)</option>
+                    <option value="Andheri West Aqua Wholesale Hub, Mumbai">Andheri West Aqua Wholesale Hub (Mumbai, MH)</option>
+                    <option value="Bandra & Kurla Aquatic Cluster, Mumbai">Bandra &amp; Kurla Aquatic Cluster (Mumbai, MH)</option>
+                    <option value="Thane West Exotic Breeders Cluster, Mumbai Metro">Thane West Exotic Breeders Cluster (Thane, Mumbai Metro)</option>
+                    <option value="Vashi & Navi Mumbai Wholesale Terminal, Navi Mumbai">Vashi &amp; Navi Mumbai Aquatic Terminal (Navi Mumbai, MH)</option>
+                    <option value="Dadar Aquarium Syndicate, Mumbai">Dadar Aquarium Wholesale Syndicate (Mumbai, MH)</option>
+                    <option value="Ghatkopar Central Aquatic Terminal, Mumbai">Ghatkopar Central Aquatic Terminal (Mumbai, MH)</option>
                   </select>
                 </div>
 

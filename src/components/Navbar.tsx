@@ -38,13 +38,13 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="tracking-wide text-center sm:text-left text-gray-200 font-light">
             Experience the epitome of aquatic luxury living — Enjoy complimentary{' '}
-            <span className="font-semibold text-white">White Glove Air Cargo Delivery</span> on all wholesale orders over ₹15,000
+            <span className="font-semibold text-white">1-Hour Local Porter Delivery</span> on all wholesale orders over ₹4,999 across Mumbai Metro
           </p>
 
           <div className="flex items-center gap-4 text-gray-300 text-[11px] tracking-wider uppercase font-medium">
-            <span className="hidden md:inline text-gray-400">Pan-India Live Arrival Guaranteed</span>
+            <span className="hidden md:inline text-emerald-400 font-semibold">📍 Hyperlocal Mumbai &amp; MMR Express (&lt;1 hr)</span>
             <span className="text-gray-600 hidden md:inline">•</span>
-            <span>Wholesale Support: +91 98200 11223</span>
+            <span>Mumbai Wholesale Desk: +91 98200 11223</span>
           </div>
         </div>
       </div>

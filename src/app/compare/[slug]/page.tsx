@@ -331,7 +331,7 @@ export default function CompareSlugPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-slate-500">DOA Policy:</span>
-                          <span className="font-semibold text-teal-700">24-hr Air Cargo Guaranteed</span>
+                          <span className="font-semibold text-teal-700">1-Hour Local Porter Guaranteed</span>
                         </div>
                       </div>
                     </div>

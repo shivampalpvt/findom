@@ -162,7 +162,7 @@ export default function RetailerDashboard() {
 
           <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-2xs">
             <div className="flex items-center justify-between text-slate-500">
-              <span className="text-xs font-semibold uppercase tracking-wider">Air Cargo in Transit</span>
+              <span className="text-xs font-semibold uppercase tracking-wider">Porter in Local Transit</span>
               <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
                 <Truck className="w-4 h-4" />
               </div>
@@ -343,28 +343,28 @@ export default function RetailerDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
-                name: 'Coromandel Aqua Breeders',
-                location: 'Kolathur Hub, Chennai',
+                name: 'Western Ghats & Mumbai Aqua Hub',
+                location: 'Andheri West, Mumbai',
                 specialty: 'High-Grade Show Discus & Altum Angelfish',
                 rating: 4.9,
                 deliveries: 142,
-                doaRate: '0.2%',
+                doaRate: '0.0%',
               },
               {
-                name: 'Hooghly Ornamental Hatchery',
-                location: 'Galiff Street, Kolkata',
+                name: 'Thane Exotic Fish Breeders & Imports',
+                location: 'Thane West, Mumbai Metro',
                 specialty: 'Pure Strain Guppies & Tetras',
-                rating: 4.7,
+                rating: 4.8,
                 deliveries: 98,
-                doaRate: '0.4%',
+                doaRate: '0.1%',
               },
               {
-                name: 'Malabar Aquatic Imports & Farms',
-                location: 'Aluva, Kochi',
-                specialty: 'Rare L-Number Plecos & Wild Catfish',
-                rating: 4.8,
-                deliveries: 76,
-                doaRate: '0.5%',
+                name: 'Navi Mumbai Aquatic Center & Supplies',
+                location: 'Vashi, Navi Mumbai',
+                specialty: 'Rare L-Number Plecos & Wholesale Care Supplies',
+                rating: 4.9,
+                deliveries: 115,
+                doaRate: '0.0%',
               },
             ].map((breeder, idx) => (
               <div key={idx} className="p-4 rounded-xl border border-slate-100 bg-slate-50/60 hover:bg-slate-50 transition">
