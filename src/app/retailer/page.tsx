@@ -121,7 +121,7 @@ export default function RetailerDashboard() {
                   {ordersAwaitingPhotoApproval.length} Pre-Dispatch Shipment(s) Ready for Your Inspection!
                 </h3>
                 <p className="text-xs text-amber-100 mt-0.5">
-                  The breeder has packaged your fish with oxygen and uploaded visual inspection proofs. Inspect specimen health before they board cargo.
+                  The breeder has packaged your fish with oxygen and uploaded visual inspection proofs. Inspect specimen health before Porter driver pickup.
                 </p>
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function RetailerDashboard() {
           <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <h3 className="text-base font-bold text-slate-900">Your Wholesale Orders</h3>
-              <p className="text-xs text-slate-500">Inspect photos, track flights, and confirm live arrival</p>
+              <p className="text-xs text-slate-500">Inspect photos, track local Porter delivery, and confirm live arrival</p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -216,11 +216,11 @@ export default function RetailerDashboard() {
                 onClick={() => setFilter('in_transit')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                   filter === 'in_transit'
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-indigo-50 text-indigo-800 hover:bg-indigo-100 border border-indigo-200'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
                 }`}
               >
-                In Transit ({ordersInTransit.length})
+                In Local Transit ({ordersInTransit.length})
               </button>
             </div>
           </div>
@@ -277,15 +277,15 @@ export default function RetailerDashboard() {
                         <td className="py-3.5 px-4 font-bold text-slate-900">
                           ₹{order.total_amount.toLocaleString('en-IN')}
                           <span className="block text-[10px] text-slate-400 font-normal">
-                            Includes insulated air freight
+                            Includes 1-hr Porter delivery
                           </span>
                         </td>
 
                         <td className="py-3.5 px-4">
                           {getStatusBadge(order.status)}
                           {order.tracking_number && (
-                            <p className="text-[11px] text-indigo-700 font-mono mt-1">
-                              AWB: {order.tracking_number}
+                            <p className="text-[11px] text-emerald-700 font-mono mt-1 font-semibold">
+                              Porter: {order.tracking_number}
                             </p>
                           )}
                         </td>

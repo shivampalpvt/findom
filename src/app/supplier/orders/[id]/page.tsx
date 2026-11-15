@@ -55,10 +55,22 @@ export default function SupplierOrderDetailPage({
 
   // Form states for dispatch tracking
   const [courierName, setCourierName] = useState(
-    order?.tracking_courier || 'BlueDart Air Apex Cargo'
+    order?.tracking_courier || 'Porter 2-Wheeler (Express <45 mins)'
   );
   const [trackingNumber, setTrackingNumber] = useState(
     order?.tracking_number || ''
+  );
+  const [driverName, setDriverName] = useState(
+    order?.driver_name || 'Ramesh Shinde'
+  );
+  const [driverPhone, setDriverPhone] = useState(
+    order?.driver_phone || '+91 98201 54321'
+  );
+  const [vehicleNumber, setVehicleNumber] = useState(
+    order?.vehicle_number || 'MH-02-EE-4129'
+  );
+  const [estimatedMinutes, setEstimatedMinutes] = useState(
+    order?.estimated_transit_minutes || 35
   );
   const [isSubmittingTracking, setIsSubmittingTracking] = useState(false);
 
@@ -110,12 +122,17 @@ export default function SupplierOrderDetailPage({
   const handleDispatchOrder = (e: React.FormEvent) => {
     e.preventDefault();
     if (!trackingNumber.trim()) {
-      alert('Please enter a valid Courier AWB / Flight Air Waybill number.');
+      alert('Please enter a valid Porter Booking ID or local courier tracking number.');
       return;
     }
     setIsSubmittingTracking(true);
     setTimeout(() => {
-      updateOrderTracking(order.id, courierName, trackingNumber.trim());
+      updateOrderTracking(order.id, courierName, trackingNumber.trim(), {
+        driver_name: driverName,
+        driver_phone: driverPhone,
+        vehicle_number: vehicleNumber,
+        estimated_transit_minutes: estimatedMinutes,
+      });
       setIsSubmittingTracking(false);
     }, 400);
   };
@@ -204,7 +221,7 @@ export default function SupplierOrderDetailPage({
                     </h4>
                     <p className="text-xs mt-1 leading-relaxed opacity-90">
                       {order.dispatch_verification.retailer_approved === true
-                        ? `The buyer has officially confirmed specimen health and packaging compliance. You may now book airport cargo and enter AWB tracking below.`
+                        ? `The buyer has officially confirmed specimen health and packaging compliance. You may now book Porter or local courier and enter driver details below for direct <1-hr delivery.`
                         : order.dispatch_verification.retailer_approved === false
                         ? `Retailer note: "${order.dispatch_verification.retailer_feedback}". Please review and upload updated replacement photos or adjust stock.`
                         : `Photos were uploaded on ${new Date(order.dispatch_verification.uploaded_at).toLocaleString('en-IN')}. The retailer has been notified to inspect and approve.`}
@@ -344,7 +361,7 @@ export default function SupplierOrderDetailPage({
                     rows={3}
                     value={packagingNotes}
                     onChange={(e) => setPackagingNotes(e.target.value)}
-                    placeholder="Specify oxygen ratio, thermocol wall thickness, water temperature at packing, heat/ice pack added, flight or courier route..."
+                    placeholder="Specify oxygen ratio, carrier bag insulation, water temperature at packing, local Porter route, and store delivery instructions..."
                     className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
                   />
                   <p className="text-[11px] text-slate-400 mt-1">
@@ -378,16 +395,16 @@ export default function SupplierOrderDetailPage({
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-slate-900">
-                      Courier & Air Cargo Dispatch
+                      Local Express Dispatch (Porter / 1-Hour SLA)
                     </h3>
                     <p className="text-xs text-slate-500">
-                      Enter airline air waybill (AWB) or surface courier tracking number
+                      Book Porter or local express partner for same-day store delivery (&lt;1 hr)
                     </p>
                   </div>
                 </div>
                 {order.status === 'dispatched' ? (
                   <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
-                    Dispatched & In Transit
+                    Dispatched &amp; In Transit
                   </span>
                 ) : (
                   <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
@@ -397,16 +414,33 @@ export default function SupplierOrderDetailPage({
               </div>
 
               {order.tracking_number && (
-                <div className="mt-4 p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-slate-500 font-medium">Active Air Waybill / Tracking</p>
-                    <p className="text-sm font-bold text-slate-900 mt-0.5">
-                      {order.tracking_courier} — <span className="font-mono text-brand-700">{order.tracking_number}</span>
-                    </p>
+                <div className="mt-4 p-4 bg-indigo-50/60 border border-indigo-100 rounded-xl space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-slate-500 font-medium">Assigned Delivery Partner</p>
+                      <p className="text-sm font-bold text-slate-900 mt-0.5">
+                        {order.tracking_courier} — <span className="font-mono text-brand-700">{order.tracking_number}</span>
+                      </p>
+                    </div>
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                      Live Porter Tracking Active
+                    </span>
                   </div>
-                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                    Live Tracking Active
-                  </span>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2 border-t border-indigo-100/70 text-xs text-slate-600">
+                    <div>
+                      <span className="text-slate-400 block text-[10px] uppercase font-bold">Driver:</span>
+                      <span className="font-semibold text-slate-800">{order.driver_name || 'Ramesh Shinde'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px] uppercase font-bold">Vehicle:</span>
+                      <span className="font-mono font-semibold text-slate-800">{order.vehicle_number || 'MH-02-EE-4129'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400 block text-[10px] uppercase font-bold">Est. Transit:</span>
+                      <span className="font-semibold text-emerald-700">{order.estimated_transit_minutes || 35} mins</span>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -414,30 +448,82 @@ export default function SupplierOrderDetailPage({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                      Cargo Partner / Courier
+                      Delivery Partner / Mode
                     </label>
                     <select
                       value={courierName}
                       onChange={(e) => setCourierName(e.target.value)}
                       className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      <option value="BlueDart Air Apex Cargo">BlueDart Air Apex Cargo (Live Animal Express)</option>
-                      <option value="Air India Cargo Apex">Air India Cargo Airport-to-Airport</option>
-                      <option value="IndiGo CarGo Cold Chain">IndiGo CarGo 6E Cold Chain</option>
-                      <option value="DTDC Aquatic Express">DTDC Aquatic Priority</option>
-                      <option value="Local Airport Pickup (Air Freight)">Direct Airline Cargo (Airport Counter)</option>
+                      <option value="Porter 2-Wheeler (Express <45 mins)">Porter 2-Wheeler (Express &lt;45 mins)</option>
+                      <option value="Porter 3-Wheeler / Tata Ace">Porter 3-Wheeler / Tata Ace (Heavy Tanks &amp; Crates)</option>
+                      <option value="Borzo Hyperlocal Courier">Borzo Hyperlocal Express Courier</option>
+                      <option value="Direct Farm Store Delivery">Direct Farm Van / Store Runner</option>
                     </select>
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                      Air Waybill / Tracking AWB #
+                      Porter Booking / Trip ID #
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. BD-AIR-8839219 or 6E-CARGO-9912"
+                      placeholder="e.g. PORTER-BOM-88392 or BORZO-7712"
                       value={trackingNumber}
                       onChange={(e) => setTrackingNumber(e.target.value)}
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Driver Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Ramesh Shinde"
+                      value={driverName}
+                      onChange={(e) => setDriverName(e.target.value)}
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Driver Contact Mobile
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. +91 98201 54321"
+                      value={driverPhone}
+                      onChange={(e) => setDriverPhone(e.target.value)}
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Vehicle Reg Number
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. MH-02-EE-4129"
+                      value={vehicleNumber}
+                      onChange={(e) => setVehicleNumber(e.target.value)}
+                      className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                      Estimated Transit Time (Minutes)
+                    </label>
+                    <input
+                      type="number"
+                      min="15"
+                      max="60"
+                      value={estimatedMinutes}
+                      onChange={(e) => setEstimatedMinutes(Number(e.target.value))}
                       className="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
@@ -445,7 +531,7 @@ export default function SupplierOrderDetailPage({
 
                 <div className="flex items-center justify-between pt-2">
                   <p className="text-[11px] text-slate-500">
-                    * Dispatch updates the order status to &quot;In Transit&quot; and sends SMS / push alerts to the retailer.
+                    * Assigning driver updates order to &quot;In Transit&quot; and sends SMS with live driver ETA and delivery OTP to retailer.
                   </p>
                   <button
                     type="submit"
@@ -453,7 +539,7 @@ export default function SupplierOrderDetailPage({
                     className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-2 disabled:opacity-50"
                   >
                     <Truck className="w-4 h-4" />
-                    {isSubmittingTracking ? 'Confirming Dispatch...' : 'Confirm Shipment & Update AWB'}
+                    {isSubmittingTracking ? 'Confirming Dispatch...' : 'Dispatch via Porter / Courier'}
                   </button>
                 </div>
               </form>

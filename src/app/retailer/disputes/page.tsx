@@ -291,7 +291,7 @@ export default function RetailerDisputesPage() {
                   <option value="doa_dispute">Dead on Arrival (DOA) / Casualties</option>
                   <option value="species_mismatch">Species or Grade Mismatch</option>
                   <option value="packaging_failure">Packaging Leak or Insulation Damage</option>
-                  <option value="flight_delay">Cargo / Airline Transfer Delay</option>
+                  <option value="porter_delay">Porter / Local Courier Delay (&gt;60 min)</option>
                   <option value="general_support">General Support</option>
                 </select>
               </div>

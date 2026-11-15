@@ -46,8 +46,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/air-cargo" className="hover:text-white transition">
-                  Shipping & Air Cargo Delivery
+                <Link href="/local-delivery" className="hover:text-white transition">
+                  1-Hour Porter Express Delivery
                 </Link>
               </li>
               <li>

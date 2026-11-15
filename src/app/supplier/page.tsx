@@ -132,7 +132,7 @@ export default function SupplierDashboard() {
                   <span className="bg-purple-500/30 text-purple-200 text-xs px-2 py-0.5 rounded-full border border-purple-400/30">Live Check</span>
                 </h3>
                 <p className="text-xs text-purple-200 mt-0.5">
-                  Retailer is inspecting pre-dispatch health, fin integrity & packaging videos before flight boarding.
+                  Retailer is inspecting pre-dispatch health, fin integrity &amp; packaging proofs before Porter driver pickup.
                 </p>
               </div>
             </div>

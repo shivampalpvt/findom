@@ -33,11 +33,12 @@ export default function CheckoutPage() {
     phone: currentUser?.phone || '',
     gstin: currentUser?.gstin || '',
     addressLine: currentUser?.address || '',
+    landmark: 'Near Mehboob Studio, Station Road',
     city: currentUser?.city || 'Mumbai',
     state: currentUser?.state || 'Maharashtra',
     pincode: currentUser?.pincode || '',
-    nearestAirport: 'Chhatrapati Shivaji Maharaj Intl (BOM) Air Cargo Terminal',
-    deliveryNotes: 'Please ensure oxygen double-bagging and thermocol insulation for morning flight.',
+    deliveryMode: 'porter_bike',
+    deliveryNotes: 'Please ensure oxygen double-bagging and temperature buffer for 45-min Porter bike delivery.',
   });
 
   const [paymentMethod, setPaymentMethod] = useState<'escrow' | 'credit'>('escrow');
@@ -75,7 +76,8 @@ export default function CheckoutPage() {
 
     Object.values(groups).forEach((g) => {
       g.subtotal = g.items.reduce((sum, it) => sum + it.listing.price_per_unit * it.quantity, 0);
-      g.shippingFee = g.subtotal > 15000 ? 0 : 950;
+      // Hyperlocal Porter Delivery: Free on consignments > ₹4,999, else standard ₹199 local dispatch fee
+      g.shippingFee = g.subtotal > 4999 ? 0 : 199;
       g.total = g.subtotal + g.shippingFee;
     });
 
@@ -122,16 +124,17 @@ export default function CheckoutPage() {
         contact_person: formData.contactPerson,
         phone: formData.phone,
         address_line: formData.addressLine,
+        landmark: formData.landmark,
         city: formData.city,
         state: formData.state,
         pincode: formData.pincode,
         gstin: formData.gstin,
-        airport_terminal: formData.nearestAirport,
+        delivery_mode: formData.deliveryMode,
       };
 
       const generatedIds = await placeOrder(
         shippingAddress,
-        `${formData.deliveryNotes} | Airport: ${formData.nearestAirport}`
+        `${formData.deliveryNotes} | Landmark: ${formData.landmark} | Mode: ${formData.deliveryMode}`
       );
 
       setOrderPlacedSuccess(generatedIds);
@@ -220,7 +223,7 @@ export default function CheckoutPage() {
                   1
                 </span>
                 <p>
-                  <strong>Pre-Dispatch Photo Upload:</strong> The breeding farm captures photos of your live specimens in oxygen bags before packing into insulated thermocol boxes.
+                  <strong>Pre-Dispatch Photo Upload:</strong> The breeding farm captures photos of your live specimens in oxygenated water before packing into insulated transit carriers.
                 </p>
               </div>
               <div className="flex items-start gap-3">
@@ -228,7 +231,7 @@ export default function CheckoutPage() {
                   2
                 </span>
                 <p>
-                  <strong>Retailer Inspection & Approval:</strong> You review the photos on your phone. Once approved, the consignment is dispatched to the airport cargo terminal.
+                  <strong>Retailer Inspection & Approval:</strong> You review specimen vitality on your device. Once approved, the supplier summons a Porter driver for instant pickup.
                 </p>
               </div>
               <div className="flex items-start gap-3">
@@ -236,7 +239,7 @@ export default function CheckoutPage() {
                   3
                 </span>
                 <p>
-                  <strong>24-Hour Air Cargo Pickup:</strong> Collect the live boxes at your airport terminal. Confirm live delivery within 2 hours to release escrow funds.
+                  <strong>1-Hour Doorstep Store Handover:</strong> The Porter driver delivers directly to your store door within 30-60 minutes. Check your live stock and confirm delivery to disburse escrow.
                 </p>
               </div>
             </div>
@@ -433,29 +436,105 @@ export default function CheckoutPage() {
 
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">
-                    Nearest Domestic Airport Cargo Terminal *
+                    Store Landmark &amp; Entrance Details *
                   </label>
                   <input
                     type="text"
                     required
-                    name="nearestAirport"
-                    value={formData.nearestAirport}
+                    name="landmark"
+                    value={formData.landmark}
                     onChange={handleInputChange}
-                    placeholder="e.g. Mumbai (BOM) / Delhi (DEL) / Bengaluru (BLR)"
+                    placeholder="e.g. Near Mehboob Studio, Opposite Metro Station Gate 2"
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white"
                   />
                 </div>
 
                 <div className="sm:col-span-2">
                   <label className="block font-bold text-slate-700 mb-1">
-                    Delivery & Packing Instructions (Insulation, Flight Timing)
+                    Local Express Delivery Partner (Up to 1-Hour Transit) *
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <label
+                      onClick={() => setFormData((p) => ({ ...p, deliveryMode: 'porter_bike' }))}
+                      className={`p-3 rounded-xl border cursor-pointer transition ${
+                        formData.deliveryMode === 'porter_bike'
+                          ? 'border-brand-600 bg-brand-50/50 ring-1 ring-brand-600'
+                          : 'border-slate-200 bg-white hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="deliveryMode"
+                          checked={formData.deliveryMode === 'porter_bike'}
+                          onChange={() => {}}
+                          className="accent-brand-600"
+                        />
+                        <span className="font-bold text-xs text-slate-900">Porter 2-Wheeler</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Express &lt;45 mins for bagged fish, foods &amp; filters. (Flat ₹199 / Free &gt;₹4,999)
+                      </p>
+                    </label>
+
+                    <label
+                      onClick={() => setFormData((p) => ({ ...p, deliveryMode: 'porter_tempo' }))}
+                      className={`p-3 rounded-xl border cursor-pointer transition ${
+                        formData.deliveryMode === 'porter_tempo'
+                          ? 'border-brand-600 bg-brand-50/50 ring-1 ring-brand-600'
+                          : 'border-slate-200 bg-white hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="deliveryMode"
+                          checked={formData.deliveryMode === 'porter_tempo'}
+                          onChange={() => {}}
+                          className="accent-brand-600"
+                        />
+                        <span className="font-bold text-xs text-slate-900">Porter 3-Wheeler / Ace</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Heavy rimless glass tanks, commercial tubs, and bulk crates.
+                      </p>
+                    </label>
+
+                    <label
+                      onClick={() => setFormData((p) => ({ ...p, deliveryMode: 'borzo_express' }))}
+                      className={`p-3 rounded-xl border cursor-pointer transition ${
+                        formData.deliveryMode === 'borzo_express'
+                          ? 'border-brand-600 bg-brand-50/50 ring-1 ring-brand-600'
+                          : 'border-slate-200 bg-white hover:bg-slate-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="deliveryMode"
+                          checked={formData.deliveryMode === 'borzo_express'}
+                          onChange={() => {}}
+                          className="accent-brand-600"
+                        />
+                        <span className="font-bold text-xs text-slate-900">Borzo / Direct Courier</span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Point-to-point direct dispatch with live OTP handover.
+                      </p>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Delivery &amp; Handling Instructions (Bags, Porter Contact)
                   </label>
                   <textarea
                     rows={2}
                     name="deliveryNotes"
                     value={formData.deliveryNotes}
                     onChange={handleInputChange}
-                    placeholder="e.g. Please oxygen pack 2 fish per bag. Morning flight preferred."
+                    placeholder="e.g. Please oxygen pack 2 fish per bag. Porter driver can call 98200xxxxx on arrival."
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white"
                   />
                 </div>
@@ -491,7 +570,7 @@ export default function CheckoutPage() {
                           </span>
                         </h3>
                         <p className="text-xs text-slate-600 mt-1 leading-relaxed">
-                          Your funds are authorized and placed into a secure escrow account. The money is transferred to the hatchery only after you review pre-dispatch photos and confirm healthy live delivery at airport cargo pickup.
+                          Your funds are authorized and placed into a secure escrow account. The money is transferred to the supplier only after you review pre-dispatch photos and confirm healthy live delivery at your shop entrance upon 1-hour Porter arrival.
                         </p>
                       </div>
                     </div>

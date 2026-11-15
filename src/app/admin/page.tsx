@@ -222,7 +222,7 @@ export default function AdminDashboard() {
                 Full Marketplace Order Audit
               </h3>
               <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                Master audit trail of every wholesale transaction, airway bill, tracking route, and settlement stage.
+                Master audit trail of every wholesale transaction, Porter dispatch, tracking route, and settlement stage.
               </p>
             </div>
             <span className="text-xs font-bold text-indigo-600 flex items-center gap-1 mt-4">

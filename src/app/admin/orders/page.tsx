@@ -70,7 +70,7 @@ export default function AdminOrdersPage() {
       <PortalHeader
         portal="admin"
         title="Master Order Audit & Consignments"
-        subtitle="Complete cross-platform audit of all wholesale orders, live air cargo dispatches, and escrow settlement status"
+        subtitle="Complete cross-platform audit of all wholesale orders, live Porter dispatches, and escrow settlement status"
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 space-y-6">
@@ -79,7 +79,7 @@ export default function AdminOrdersPage() {
           <div className="relative w-full md:w-96">
             <input
               type="text"
-              placeholder="Search by order #, retailer, breeder, AWB..."
+              placeholder="Search by order #, retailer, breeder, Porter ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -117,7 +117,7 @@ export default function AdminOrdersPage() {
                   <th className="py-3 px-4">Consignment Total</th>
                   <th className="py-3 px-4">Order Status</th>
                   <th className="py-3 px-4">Escrow Status</th>
-                  <th className="py-3 px-4">Air Cargo AWB</th>
+                  <th className="py-3 px-4">Local Courier / Porter ID</th>
                   <th className="py-3 px-4 text-right">Audit</th>
                 </tr>
               </thead>

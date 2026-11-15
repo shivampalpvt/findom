@@ -43,7 +43,18 @@ interface MarketplaceContextType {
   updateCartQty: (listingId: string, qty: number) => void;
   placeOrder: (shippingAddress: any, notes?: string) => Promise<string[]>;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
-  updateOrderTracking: (orderId: string, courier: string, trackingNumber: string) => void;
+  updateOrderTracking: (
+    orderId: string,
+    courier: string,
+    trackingNumber: string,
+    details?: {
+      driver_name?: string;
+      driver_phone?: string;
+      vehicle_number?: string;
+      estimated_transit_minutes?: number;
+      delivery_otp?: string;
+    }
+  ) => void;
   uploadDispatchPhotos: (orderId: string, photos: string[], notes: string) => void;
   reviewDispatchPhotos: (orderId: string, approved: boolean, comments?: string) => void;
   confirmDelivery: (
@@ -249,7 +260,7 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
     Object.entries(supplierGroups).forEach(([supplierId, items]) => {
       const supplier = allProfiles.find((p) => p.id === supplierId) || items[0].listing.supplier;
       const subtotal = items.reduce((acc, it) => acc + it.listing.price_per_unit * it.quantity, 0);
-      const shippingFee = subtotal > 15000 ? 0 : 950;
+      const shippingFee = subtotal > 4999 ? 0 : 199; // Hyperlocal 1-Hour Porter Delivery: Free on orders > ₹4,999, else flat ₹199
       const total = subtotal + shippingFee;
       const orderId = `ord-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       const orderNum = `FD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -267,6 +278,9 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
         shipping_fee: shippingFee,
         total_amount: total,
         shipping_address: shippingAddress,
+        delivery_mode: 'porter_bike',
+        delivery_otp: `${Math.floor(1000 + Math.random() * 9000)}`,
+        estimated_transit_minutes: 45,
         retailer_notes: notes,
         created_at: new Date().toISOString(),
         items: items.map((it) => ({
@@ -311,7 +325,18 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
     );
   };
 
-  const updateOrderTracking = (orderId: string, courier: string, trackingNumber: string) => {
+  const updateOrderTracking = (
+    orderId: string,
+    courier: string,
+    trackingNumber: string,
+    details?: {
+      driver_name?: string;
+      driver_phone?: string;
+      vehicle_number?: string;
+      estimated_transit_minutes?: number;
+      delivery_otp?: string;
+    }
+  ) => {
     setOrders((prev) =>
       prev.map((o) =>
         o.id === orderId
@@ -319,6 +344,11 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
               ...o,
               tracking_courier: courier,
               tracking_number: trackingNumber,
+              driver_name: details?.driver_name || o.driver_name || 'Porter Assigned Driver',
+              driver_phone: details?.driver_phone || o.driver_phone || '+91 98201 54321',
+              vehicle_number: details?.vehicle_number || o.vehicle_number || 'MH-02-EE-4129',
+              estimated_transit_minutes: details?.estimated_transit_minutes || 45,
+              delivery_otp: details?.delivery_otp || o.delivery_otp || `${Math.floor(1000 + Math.random() * 9000)}`,
               status: 'dispatched',
             }
           : o
@@ -327,12 +357,15 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
 
     const targetOrder = orders.find((o) => o.id === orderId);
     if (targetOrder) {
+      const driverDesc = details?.driver_name
+        ? `${details.driver_name} (${courier})`
+        : courier;
       setNotifications((prev) => [
         {
           id: `notif-${Date.now()}`,
           user_id: targetOrder.retailer_id,
-          title: '✈️ Order Dispatched & In Transit',
-          message: `Order #${targetOrder.order_number} has been dispatched via ${courier} (AWB: ${trackingNumber}). Track arrival.`,
+          title: '🛵 Porter Express: Out for 1-Hour Local Delivery',
+          message: `Order #${targetOrder.order_number} has been picked up by ${driverDesc}. ETA: ~35-45 mins. Have shop tanks ready for acclimation!`,
           link: `/retailer/orders/${orderId}`,
           type: 'order',
           is_read: false,

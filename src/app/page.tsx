@@ -260,7 +260,7 @@ export default function HomePage() {
               Connecting India’s Master Breeders with Aquarium Retailers
             </h2>
             <p className="text-xs sm:text-sm text-gray-600 mt-3 font-normal leading-relaxed">
-              Whether you operate a 200-tank commercial hatchery or a luxury retail aquarium gallery, Findom provides the infrastructure, escrow custody, and cargo logistics for secure live ornamental commerce.
+              Whether you operate a 200-tank commercial hatchery or a luxury retail aquarium gallery, Findom provides the infrastructure, escrow custody, and hyperlocal 1-hour delivery logistics for secure live ornamental commerce.
             </p>
           </div>
 
@@ -270,27 +270,27 @@ export default function HomePage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold tracking-[0.2em] uppercase">
-                    For Breeders & Fish Suppliers
+                    For Breeders &amp; Fish Suppliers
                   </span>
                   <Building2 className="w-5 h-5 text-emerald-700" />
                 </div>
 
                 <h3 className="font-serif text-2xl text-gray-900 font-normal mb-3">
-                  Expand Your Commercial Hatchery Nationwide
+                  Expand Your Commercial Hatchery Locally &amp; Metro-Wide
                 </h3>
 
                 <p className="text-xs text-gray-600 leading-relaxed mb-6 font-light">
-                  List your live tank stock, set your own wholesale prices in Indian Rupees (₹), and sell directly to verified retail aquarium shops across 28 states without regional broker markups.
+                  List your live tank stock, set your own wholesale prices in Indian Rupees (₹), and sell directly to verified retail aquarium shops with instant 1-hour Porter pickup and zero flight transit complications.
                 </p>
 
                 <ul className="space-y-3 mb-8 text-xs text-gray-700">
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>100% Price & Inventory Autonomy:</strong> Set unit pricing, minimum order quantities (MOQ), and live tank availability.</span>
+                    <span><strong>100% Price &amp; Inventory Autonomy:</strong> Set unit pricing, minimum order quantities (MOQ), and live tank availability.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>Pre-Dispatch Photo Upload:</strong> Attach live bagged photos before airport handover to eliminate customer dispute ambiguity.</span>
+                    <span><strong>Pre-Dispatch Photo Upload:</strong> Attach live bagged photos before Porter driver handover to eliminate customer dispute ambiguity.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -320,17 +320,17 @@ export default function HomePage() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 text-[10px] font-bold tracking-[0.2em] uppercase">
-                    For Retailers & Aquarium Vendors
+                    For Retailers &amp; Aquarium Vendors
                   </span>
                   <Package className="w-5 h-5 text-sky-400" />
                 </div>
 
                 <h3 className="font-serif text-2xl text-white font-normal mb-3">
-                  Source Direct from India's Premier Hatcheries
+                  Source Direct from Nearby City Hatcheries
                 </h3>
 
                 <p className="text-xs text-gray-300 leading-relaxed mb-6 font-light">
-                  Bypass traditional multi-tier distributors. Source exotic Discus, imported Guppy strains, Arowanas, and Cichlids at farm-gate prices directly from Kolathur, Galiff Street, and Kerala.
+                  Bypass traditional multi-tier distributors. Source exotic Discus, imported Guppy strains, tanks, feeds, and equipment delivered straight to your shop door in under 1 hour via Porter.
                 </p>
 
                 <ul className="space-y-3 mb-8 text-xs text-gray-300">
@@ -340,11 +340,11 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                    <span><strong>Pre-Dispatch Visual Sign-Off:</strong> Inspect high-res photographs of your actual fish before the flight departs.</span>
+                    <span><strong>Pre-Dispatch Visual Sign-Off:</strong> Inspect high-res photographs of your actual fish before the Porter driver is summoned.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                    <span><strong>100% Live Arrival & Escrow Protection:</strong> Complimentary DOA casualty compensation backed by air cargo white-glove delivery.</span>
+                    <span><strong>100% Live Arrival &amp; Escrow Protection:</strong> Zero flight delay stress with safe 45-minute temperature-controlled local vehicle delivery.</span>
                   </li>
                 </ul>
               </div>
@@ -407,11 +407,11 @@ export default function HomePage() {
           {/* Policy Guarantees Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 pb-16 border-b border-gray-200">
             <div className="py-4 md:px-6">
-              <h3 className="font-serif text-lg text-gray-900 font-normal mb-2">Free Shipping Policy</h3>
+              <h3 className="font-serif text-lg text-gray-900 font-normal mb-2">1-Hour Local Delivery Policy</h3>
               <p className="text-xs text-gray-500 leading-relaxed mb-3">
-                Complimentary airport-to-airport air cargo freight on wholesale consignments over ₹15,000 across India.
+                Complimentary 1-hour express Porter local delivery on wholesale consignments over ₹4,999 in your city hub.
               </p>
-              <Link href="/air-cargo" className="text-[11px] font-semibold tracking-wider uppercase text-gray-900 hover:underline">
+              <Link href="/local-delivery" className="text-[11px] font-semibold tracking-wider uppercase text-gray-900 hover:underline">
                 Read Full Policy &gt;
               </Link>
             </div>
@@ -429,7 +429,7 @@ export default function HomePage() {
             <div className="py-4 md:px-6">
               <h3 className="font-serif text-lg text-gray-900 font-normal mb-2">Escrow Protection</h3>
               <p className="text-xs text-gray-500 leading-relaxed mb-3">
-                Your funds remain locked in neutral custody until you confirm live arrival and inspect pre-dispatch proof.
+                Your funds remain locked in neutral custody until you inspect pre-dispatch proof and confirm healthy live delivery at your shop.
               </p>
               <Link href="/terms" className="text-[11px] font-semibold tracking-wider uppercase text-gray-900 hover:underline">
                 Learn More &gt;
@@ -443,9 +443,9 @@ export default function HomePage() {
               <div className="w-10 h-10 border border-gray-900 flex items-center justify-center text-gray-900">
                 <Truck className="w-5 h-5 stroke-[1.5]" />
               </div>
-              <h4 className="font-serif text-base text-gray-900 font-medium">White Glove Delivery</h4>
+              <h4 className="font-serif text-base text-gray-900 font-medium">Hyperlocal Porter Delivery</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                30mm insulated thermocol packaging, double oxygen bagging, and expedited airport terminal cargo dispatch for 24-hr transit.
+                Oxygen double-bagging, insulated carriers, and on-demand Porter 2-wheeler or tempo dispatch for guaranteed under 1-hour store arrival.
               </p>
             </div>
 
@@ -455,7 +455,7 @@ export default function HomePage() {
               </div>
               <h4 className="font-serif text-base text-gray-900 font-medium">Pre-Dispatch Verification</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                The supplier captures high-res photographs of your packed stock before shipment. You review and sign off before the flight takes off.
+                The supplier captures high-res photographs of your packed stock before shipment. You review and sign off before the Porter driver arrives.
               </p>
             </div>
 
@@ -465,7 +465,7 @@ export default function HomePage() {
               </div>
               <h4 className="font-serif text-base text-gray-900 font-medium">Curated Quality</h4>
               <p className="text-xs text-gray-500 leading-relaxed">
-                Direct partnerships with licensed breeding facilities across Kolathur (Chennai), Galiff Street (Kolkata), and Kerala.
+                Direct partnerships with licensed breeding facilities and distributors across Mumbai, Chennai, Kolkata, and Bengaluru metro hubs.
               </p>
             </div>
           </div>
@@ -484,7 +484,7 @@ export default function HomePage() {
           </div>
 
           <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl text-gray-900 font-light leading-relaxed italic max-w-3xl mx-auto mb-8">
-            From the moment our curated discus lots arrived, our showroom was transformed into a sanctuary of unparalleled aquatic elegance. The pre-dispatch photos matched the live specimens 100%, and the airport freight arrived with 0% casualty. True luxury is not just seen, it is deeply felt in every transaction.
+            From the moment our curated discus lots arrived, our showroom was transformed into a sanctuary of unparalleled aquatic elegance. The pre-dispatch photos matched the live specimens 100%, and the Porter driver arrived in just 35 minutes with 0% casualty. True luxury is not just seen, it is deeply felt in every transaction.
           </blockquote>
 
           <div className="text-xs font-sans tracking-[0.2em] text-gray-600 uppercase">

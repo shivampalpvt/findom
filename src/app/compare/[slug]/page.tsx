@@ -588,7 +588,7 @@ export default function CompareSlugPage() {
                 100% Pre-Dispatch Photo Inspection & Live Arrival Guarantee
               </h4>
               <p className="text-xs text-slate-600 mt-0.5">
-                Whichever breeder you select above, Findom mandates photo approval before domestic air cargo packaging. Funds remain safely held in Escrow.
+                Whichever breeder you select above, Findom mandates photo approval before local express dispatch. Funds remain safely held in Escrow until 1-hour store handover.
               </p>
             </div>
           </div>

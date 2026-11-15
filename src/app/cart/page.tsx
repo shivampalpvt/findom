@@ -55,11 +55,11 @@ export default function CartPage() {
       groups[sId].items.push(item);
     });
 
-    // Calculate subtotals and air cargo fees for each supplier group
+    // Calculate subtotals and hyperlocal Porter delivery fees for each supplier group
     Object.values(groups).forEach((g) => {
       g.subtotal = g.items.reduce((sum, it) => sum + it.listing.price_per_unit * it.quantity, 0);
-      // Free air-freight if supplier subtotal > 15,000, else standard 950 INR thermocol + medical O2 flight fee
-      g.shippingFee = g.subtotal > 15000 ? 0 : 950;
+      // Free 1-hour local Porter delivery if supplier subtotal > 4,999, else standard ₹199 express bike dispatch fee
+      g.shippingFee = g.subtotal > 4999 ? 0 : 199;
       g.total = g.subtotal + g.shippingFee;
     });
 
@@ -149,7 +149,7 @@ export default function CartPage() {
             <div className="bg-sky-50/80 border border-sky-200 rounded-2xl p-4 flex items-start gap-3">
               <Info className="w-5 h-5 text-sky-600 shrink-0 mt-0.5" />
               <div className="text-xs text-sky-900 leading-relaxed">
-                <span className="font-bold">Multi-Supplier Logistics:</span> Because live fish originate directly from physical breeding hatcheries (e.g. Kolathur vs Galiff St), your order is neatly separated by supplier. Each hatchery uploads pre-dispatch photos and books domestic air cargo independently.
+                <span className="font-bold">Hyperlocal 1-Hour Porter Delivery:</span> Orders are fulfilled directly by verified suppliers in your city hub. Each supplier inspects and packages stock with medical pure oxygen and dispatches via on-demand Porter 2-wheeler or tempo for guaranteed under 1-hour delivery to your store door—no airport cargo delays or interstate transit stress.
               </div>
             </div>
 
@@ -358,11 +358,11 @@ export default function CartPage() {
 
                 <div className="flex items-center justify-between text-slate-600">
                   <span className="flex items-center gap-1">
-                    Combined Air Cargo:
+                    Combined Porter Delivery:
                   </span>
                   <span className="font-semibold text-slate-900">
                     {grandShipping === 0 ? (
-                      <span className="text-emerald-700 font-bold">FREE</span>
+                      <span className="text-emerald-700 font-bold">FREE (&gt;₹4,999)</span>
                     ) : (
                       `₹${grandShipping.toLocaleString('en-IN')}`
                     )}
@@ -404,7 +404,7 @@ export default function CartPage() {
                 </button>
 
                 <p className="text-[11px] text-slate-400 text-center">
-                  Funds held in Escrow. Zero risk until air arrival confirmation.
+                  Funds held in Escrow. Zero risk until 1-hr live arrival inspection.
                 </p>
               </div>
 

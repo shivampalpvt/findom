@@ -208,7 +208,7 @@ export default function AdminDisputesPage() {
                           Supplier Pre-Dispatch Photos
                         </span>
                         <span className="text-[10px] text-emerald-700 font-semibold">
-                          Pre-flight packaging
+                          Pre-dispatch inspection
                         </span>
                       </div>
 

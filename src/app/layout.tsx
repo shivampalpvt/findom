@@ -20,7 +20,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Findom Atelier: India’s Premier Luxury B2B Fish Marketplace',
   description:
-    'Curated wholesale marketplace connecting India’s master ornamental fish breeders with certified aquarium retail stores. White-glove air cargo delivery and pre-dispatch photo verification.',
+    'Curated wholesale marketplace connecting India’s master ornamental fish breeders with certified aquarium retail stores. Hyperlocal 1-hour Porter delivery and pre-dispatch photo verification.',
 };
 
 export default function RootLayout({

@@ -194,7 +194,7 @@ export default function RetailerOrderDetailPage({
                       Phase 1: Pre-Dispatch Visual Health Verification
                     </h3>
                     <p className="text-xs text-slate-500">
-                      Breeder must provide oxygen-bagged inspection photos before cargo boarding
+                      Breeder must provide oxygen-bagged inspection photos before Porter driver pickup
                     </p>
                   </div>
                 </div>
@@ -279,53 +279,84 @@ export default function RetailerOrderDetailPage({
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-slate-900">
-                      Phase 2: Live Airport & Cargo Transit
+                      Phase 2: Local 1-Hour Porter Delivery
                     </h3>
                     <p className="text-xs text-slate-500">
-                      High-priority insulated air freight with oxygen guarantee
+                      Direct on-demand bike/tempo transit (&lt;1 hour delivery SLA)
                     </p>
                   </div>
                 </div>
 
                 {order.tracking_number ? (
-                  <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
-                    In Air Transit
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    Out with Porter Driver (ETA &lt;45 min)
                   </span>
                 ) : (
                   <span className="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full">
-                    Awaiting Flight Handover
+                    Awaiting Porter Pickup
                   </span>
                 )}
               </div>
 
               {order.tracking_number ? (
                 <div className="mt-4 space-y-3">
-                  <div className="p-4 bg-indigo-50/50 border border-indigo-100 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs text-slate-500">Cargo Logistics Carrier</p>
-                      <p className="text-sm font-bold text-slate-900 mt-0.5">{order.tracking_courier}</p>
-                      <p className="text-xs font-mono font-bold text-indigo-700 mt-0.5">
-                        AWB # {order.tracking_number}
-                      </p>
+                  <div className="p-4 bg-emerald-50/60 border border-emerald-200/80 rounded-xl space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
+                            Local Delivery Partner
+                          </span>
+                          <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">
+                            Live GPS On
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-slate-900 mt-1">{order.tracking_courier}</p>
+                        <p className="text-xs font-mono font-bold text-emerald-700 mt-0.5">
+                          Trip ID: {order.tracking_number}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() =>
+                          alert(`Tracking Porter driver: ${order.driver_name || 'Assigned Driver'} (${order.vehicle_number || 'MH-02-EE-4129'}) en route to your store. ETA: ${order.estimated_transit_minutes || 35} mins.`)
+                        }
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition shadow-2xs shrink-0 flex items-center gap-1.5"
+                      >
+                        <MapPin className="w-3.5 h-3.5" />
+                        Track Driver on Map →
+                      </button>
                     </div>
 
-                    <button
-                      onClick={() =>
-                        alert(`Opening live tracking satellite feed for AWB #${order.tracking_number} via ${order.tracking_courier}`)
-                      }
-                      className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-2xs shrink-0"
-                    >
-                      Track Live Flight →
-                    </button>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-emerald-200/60 text-xs">
+                      <div>
+                        <span className="text-slate-400 block text-[10px] uppercase font-bold">Driver:</span>
+                        <span className="font-bold text-slate-800">{order.driver_name || 'Ramesh Shinde'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px] uppercase font-bold">Contact:</span>
+                        <span className="font-semibold text-slate-800">{order.driver_phone || '+91 98201 54321'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px] uppercase font-bold">Vehicle:</span>
+                        <span className="font-mono font-semibold text-slate-800">{order.vehicle_number || 'MH-02-EE-4129'}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-400 block text-[10px] uppercase font-bold">Delivery OTP:</span>
+                        <span className="font-mono font-black text-brand-700 bg-brand-50 px-2 py-0.5 rounded border border-brand-200">
+                          {order.delivery_otp || '4491'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   <p className="text-[11px] text-slate-500">
-                    * Make sure to have your store temperature-controlled acclimatization tanks ready at 26-28°C before box arrival.
+                    * Hand over the 4-digit Delivery OTP to the Porter driver only after visually checking the sealed bags at your shop door.
                   </p>
                 </div>
               ) : (
                 <div className="mt-4 p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-500">
-                  Tracking number and flight waybill will be generated once the supplier hands over the thermocol shipment to the airline cargo counter.
+                  Driver details and live Porter trip link will appear as soon as the breeder confirms driver pickup.
                 </div>
               )}
             </div>
@@ -426,7 +457,7 @@ export default function RetailerOrderDetailPage({
                 </div>
               ) : (
                 <div className="mt-4 p-4 bg-slate-50 rounded-xl text-center text-xs text-slate-500">
-                  Once your shipment arrives from the airport or courier, open the thermocol box and click &ldquo;Confirm Live Delivery&rdquo;.
+                  Once your shipment arrives from the Porter driver, open the carrier and click &ldquo;Confirm Live Delivery&rdquo; to complete the escrow release.
                 </div>
               )}
             </div>

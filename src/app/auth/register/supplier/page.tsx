@@ -136,7 +136,7 @@ export default function RegisterSupplierPage() {
             Register Commercial Fish Hatchery
           </h1>
           <p className="text-xs text-slate-500 mt-1 max-w-xl mx-auto">
-            Sell directly to verified aquarium shops across India. Guaranteed escrow payments, airport cold-chain pickup, and zero non-payment risk.
+            Sell directly to verified aquarium shops in your metropolitan region. Guaranteed escrow payments, direct Porter 1-hour store pickup, and zero non-payment risk.
           </p>
         </div>
 
