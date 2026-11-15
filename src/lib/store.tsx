@@ -178,10 +178,20 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
       };
     }
 
-    if (role && existing.role !== role) {
+    // If role was specified and doesn't match:
+    if (role === 'admin' && existing.role !== 'admin') {
       return {
         success: false,
-        error: `This account is registered as a ${existing.role.toUpperCase()}, not a ${role.toUpperCase()}. Please switch role or use the appropriate account.`,
+        error: 'This account does not have administrator clearance.',
+      };
+    }
+
+    if (role && role !== 'admin' && existing.role === 'admin') {
+      // User entered admin credentials while on supplier/retailer tab - allow seamless admin login!
+    } else if (role && existing.role !== role) {
+      return {
+        success: false,
+        error: `This account is registered as a ${existing.role.toUpperCase()}, not a ${role.toUpperCase()}. Please switch role tab to ${existing.role.toUpperCase()} or use the appropriate account.`,
       };
     }
 

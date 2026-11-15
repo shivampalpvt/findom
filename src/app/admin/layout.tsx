@@ -10,7 +10,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { currentUser } = useMarketplace();
+  const { currentUser, signOut } = useMarketplace();
 
   // If unauthenticated (public guest/visitor)
   if (!currentUser) {
@@ -30,12 +30,12 @@ export default function AdminLayout({
           </h1>
 
           <p className="text-xs text-stone-400 leading-relaxed mb-6 font-light">
-            The Findom Central Operations & Arbitration Command Center is restricted strictly to authorized platform administrators. Unauthenticated visitors cannot access this console.
+            The Findom Central Operations &amp; Arbitration Command Center is restricted strictly to authorized platform administrators. Unauthenticated visitors cannot access this console.
           </p>
 
           <div className="space-y-3">
             <Link
-              href="/auth/login"
+              href="/auth/login?role=admin"
               className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-white text-stone-950 font-serif text-xs font-bold uppercase tracking-widest hover:bg-stone-200 transition"
             >
               <KeyRound className="w-4 h-4" /> Sign In to Admin Console
@@ -81,16 +81,27 @@ export default function AdminLayout({
           </div>
 
           <div className="space-y-3">
+            <button
+              type="button"
+              onClick={async () => {
+                await signOut();
+                window.location.href = '/auth/login?role=admin';
+              }}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-purple-700 text-white font-serif text-xs font-bold uppercase tracking-widest hover:bg-purple-600 transition cursor-pointer"
+            >
+              <KeyRound className="w-4 h-4" /> Sign In with Admin Account
+            </button>
+
             <Link
               href={currentUser.role === 'supplier' ? '/supplier' : '/retailer'}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-white text-stone-950 font-serif text-xs font-bold uppercase tracking-widest hover:bg-stone-200 transition"
+              className="w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-stone-800 text-stone-200 font-serif text-xs font-bold uppercase tracking-widest hover:bg-stone-700 transition"
             >
               Go to Your {currentUser.role === 'supplier' ? 'Supplier' : 'Retailer'} Portal
             </Link>
 
             <Link
               href="/"
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-stone-400 hover:text-stone-200 text-xs transition"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 text-stone-400 hover:text-stone-200 text-xs transition"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Return to Public Storefront
             </Link>

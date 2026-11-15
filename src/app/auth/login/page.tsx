@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Fish,
   Lock,
@@ -11,19 +11,51 @@ import {
   AlertCircle,
   Building,
   Store,
+  ShieldCheck,
+  KeyRound,
+  Sparkles,
 } from 'lucide-react';
 import { useMarketplace } from '@/lib/store';
 import { UserRole } from '@/lib/types';
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryRole = searchParams.get('role') as UserRole | null;
+
   const { loginUser } = useMarketplace();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<UserRole>('supplier');
+  const [selectedRole, setSelectedRole] = useState<UserRole>(queryRole === 'admin' ? 'admin' : (queryRole || 'supplier'));
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (queryRole === 'admin') {
+      setSelectedRole('admin');
+      if (!email) {
+        setEmail('admin@findom.in');
+        setPassword('admin123');
+      }
+    }
+  }, [queryRole]);
+
+  const handleRoleSelect = (role: UserRole) => {
+    setSelectedRole(role);
+    setAuthError(null);
+    if (role === 'admin' && !email) {
+      setEmail('admin@findom.in');
+      setPassword('admin123');
+    }
+  };
+
+  const fillQuickDemo = (role: UserRole, demoEmail: string) => {
+    setSelectedRole(role);
+    setEmail(demoEmail);
+    setPassword('demo123');
+    setAuthError(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +106,7 @@ export default function LoginPage() {
           Commercial B2B Portal Sign In
         </h2>
         <p className="mt-1 text-xs text-slate-500">
-          Enter your registered email and password to access your dedicated business portal
+          Enter your credentials to access your dedicated business console
         </p>
       </div>
 
@@ -93,39 +125,51 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Account Type
+                Account Clearance &amp; Role
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-3 gap-2">
                 <button
                   type="button"
-                  onClick={() => setSelectedRole('supplier')}
-                  className={`py-2 px-3 text-xs font-bold rounded-xl border text-center transition flex items-center justify-center gap-1.5 ${
+                  onClick={() => handleRoleSelect('supplier')}
+                  className={`py-2 px-2 text-[11px] font-bold rounded-xl border text-center transition flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
                     selectedRole === 'supplier'
                       ? 'bg-emerald-50 border-emerald-500 text-emerald-900 ring-2 ring-emerald-500'
                       : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <Building className="w-3.5 h-3.5 text-emerald-600" />
-                  Fish Supplier
+                  Supplier
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSelectedRole('retailer')}
-                  className={`py-2 px-3 text-xs font-bold rounded-xl border text-center transition flex items-center justify-center gap-1.5 ${
+                  onClick={() => handleRoleSelect('retailer')}
+                  className={`py-2 px-2 text-[11px] font-bold rounded-xl border text-center transition flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
                     selectedRole === 'retailer'
                       ? 'bg-sky-50 border-sky-500 text-sky-900 ring-2 ring-sky-500'
                       : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <Store className="w-3.5 h-3.5 text-sky-600" />
-                  Aquarium Retailer
+                  Retailer
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleRoleSelect('admin')}
+                  className={`py-2 px-2 text-[11px] font-bold rounded-xl border text-center transition flex flex-col sm:flex-row items-center justify-center gap-1.5 ${
+                    selectedRole === 'admin'
+                      ? 'bg-purple-50 border-purple-600 text-purple-950 ring-2 ring-purple-600'
+                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
+                  Admin
                 </button>
               </div>
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                Registered Email Address
+                {selectedRole === 'admin' ? 'Admin Access ID / Email' : 'Registered Email Address'}
               </label>
               <div className="relative">
                 <input
@@ -133,7 +177,11 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. yourname@farm.com or store@pets.in"
+                  placeholder={
+                    selectedRole === 'admin'
+                      ? 'admin@findom.in'
+                      : 'e.g. yourname@farm.com or store@pets.in'
+                  }
                   className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -145,9 +193,11 @@ export default function LoginPage() {
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                   Password
                 </label>
-                <a href="#" className="text-[11px] font-bold text-brand-600 hover:underline">
-                  Forgot Password?
-                </a>
+                {selectedRole !== 'admin' && (
+                  <a href="#" className="text-[11px] font-bold text-brand-600 hover:underline">
+                    Forgot Password?
+                  </a>
+                )}
               </div>
               <div className="relative">
                 <input
@@ -165,14 +215,59 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full mt-2 py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md shadow-brand-600/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className={`w-full mt-2 py-3 px-4 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2 disabled:opacity-50 ${
+                selectedRole === 'admin'
+                  ? 'bg-purple-700 hover:bg-purple-800 shadow-purple-700/20'
+                  : 'bg-brand-600 hover:bg-brand-700 shadow-brand-600/20'
+              }`}
             >
-              {isLoading ? 'Verifying Account...' : 'Sign In to Portal'}
-              <ArrowRight className="w-4 h-4" />
+              {isLoading ? (
+                'Verifying Clearance...'
+              ) : selectedRole === 'admin' ? (
+                <>
+                  <KeyRound className="w-4 h-4" /> Enter Admin Console
+                </>
+              ) : (
+                <>
+                  <span>Sign In to Portal</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-100 text-center space-y-2">
+          {/* Quick Demo Fill Buttons */}
+          <div className="mt-6 pt-5 border-t border-slate-100">
+            <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-amber-500" />
+              One-Click Demo Test Accounts:
+            </span>
+            <div className="grid grid-cols-3 gap-1.5 text-[10px] font-semibold">
+              <button
+                type="button"
+                onClick={() => fillQuickDemo('admin', 'admin@findom.in')}
+                className="py-1.5 px-2 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 rounded-lg transition text-center"
+              >
+                🛡️ Platform Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => fillQuickDemo('supplier', 'western.ghats.aqua@gmail.com')}
+                className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 rounded-lg transition text-center"
+              >
+                🐟 Supplier
+              </button>
+              <button
+                type="button"
+                onClick={() => fillQuickDemo('retailer', 'oceanic.blue.mumbai@gmail.com')}
+                className="py-1.5 px-2 bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 rounded-lg transition text-center"
+              >
+                🏪 Retailer
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-5 pt-4 border-t border-slate-100 text-center space-y-2">
             <p className="text-xs text-slate-500">Don&apos;t have a verified commercial account yet?</p>
             <div className="flex items-center justify-center gap-3 text-xs font-bold">
               <Link
@@ -193,5 +288,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center text-xs text-slate-500">Loading sign in...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
