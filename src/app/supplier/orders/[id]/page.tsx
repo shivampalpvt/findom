@@ -100,6 +100,49 @@ export default function SupplierOrderDetailPage({
     setPhotoInput('');
   };
 
+  const handleDirectPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const files = Array.from(e.target.files);
+    files.forEach((file) => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const rawUrl = event.target?.result as string;
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 1200;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressed = canvas.toDataURL('image/jpeg', 0.85);
+            setPhotoList((prev) => [...prev, compressed]);
+          } else {
+            setPhotoList((prev) => [...prev, rawUrl]);
+          }
+        };
+        img.onerror = () => {
+          setPhotoList((prev) => [...prev, rawUrl]);
+        };
+        img.src = rawUrl;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleRemovePhoto = (index: number) => {
     setPhotoList(photoList.filter((_, i) => i !== index));
   };
@@ -260,15 +303,28 @@ export default function SupplierOrderDetailPage({
               )}
 
               <form onSubmit={handleUploadPhotos} className="mt-5 space-y-4">
-                {/* Photo URL Input */}
+                {/* Photo Upload: Direct Device Upload & URL fallback */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Live Stock & Packaging Photo URLs
-                  </label>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                      Live Stock &amp; Packaging Proof Photos *
+                    </label>
+                    <label className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold cursor-pointer transition shadow-2xs">
+                      <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Upload Photos from Device / Camera</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="hidden"
+                        onChange={handleDirectPhotoUpload}
+                      />
+                    </label>
+                  </div>
                   <div className="flex gap-2">
                     <input
                       type="url"
-                      placeholder="Paste high-res photo URL (e.g. Unsplash, Cloudinary, AWS S3)..."
+                      placeholder="Or paste high-res photo URL (e.g. Cloudinary, AWS S3, Imgur)..."
                       value={photoInput}
                       onChange={(e) => setPhotoInput(e.target.value)}
                       className="flex-1 text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
@@ -278,7 +334,7 @@ export default function SupplierOrderDetailPage({
                       onClick={handleAddPhoto}
                       className="px-4 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition flex items-center gap-1 shrink-0"
                     >
-                      <Plus className="w-3.5 h-3.5" /> Add Photo
+                      <Plus className="w-3.5 h-3.5" /> Add URL
                     </button>
                   </div>
                 </div>
