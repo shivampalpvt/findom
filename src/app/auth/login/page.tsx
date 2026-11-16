@@ -246,23 +246,26 @@ function LoginContent() {
               <button
                 type="button"
                 onClick={() => fillQuickDemo('admin', 'admin@findom.in')}
-                className="py-1.5 px-2 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 rounded-lg transition text-center"
+                className="py-2 px-2 bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 rounded-lg transition text-center flex flex-col items-center justify-center gap-0.5"
               >
-                🛡️ Platform Admin
+                <span>🛡️ Admin</span>
+                <span className="text-[9px] font-mono text-purple-600">admin@findom.in</span>
               </button>
               <button
                 type="button"
-                onClick={() => fillQuickDemo('supplier', 'western.ghats.aqua@gmail.com')}
-                className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 rounded-lg transition text-center"
+                onClick={() => fillQuickDemo('supplier', 'supplier1@findom.in')}
+                className="py-2 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 rounded-lg transition text-center flex flex-col items-center justify-center gap-0.5"
               >
-                🐟 Supplier
+                <span>🐟 Supplier</span>
+                <span className="text-[9px] font-mono text-emerald-600">supplier1@findom.in</span>
               </button>
               <button
                 type="button"
-                onClick={() => fillQuickDemo('retailer', 'oceanic.blue.mumbai@gmail.com')}
-                className="py-1.5 px-2 bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 rounded-lg transition text-center"
+                onClick={() => fillQuickDemo('retailer', 'retailer@findom.in')}
+                className="py-2 px-2 bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 rounded-lg transition text-center flex flex-col items-center justify-center gap-0.5"
               >
-                🏪 Retailer
+                <span>🏪 Retailer</span>
+                <span className="text-[9px] font-mono text-sky-600">retailer@findom.in</span>
               </button>
             </div>
           </div>

@@ -134,12 +134,22 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> => {
     const cleanEmail = email.trim().toLowerCase();
 
+    // Map known aliases for demo & convenience
+    const emailAliases: Record<string, string> = {
+      'oceanic.blue.mumbai@gmail.com': 'retailer@findom.in',
+      'oceanic.blue@gmail.com': 'retailer@findom.in',
+      'western.ghats.aqua@gmail.com': 'supplier1@findom.in',
+      'western.ghats@gmail.com': 'supplier1@findom.in',
+      'supplier@findom.in': 'supplier1@findom.in',
+    };
+    const lookupEmail = emailAliases[cleanEmail] || cleanEmail;
+
     // 1. Check Supabase Auth
     try {
       const { supabase } = await import('@/lib/supabase');
       if (supabase && password) {
         const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
+          email: lookupEmail,
           password,
         });
         if (authError) {
@@ -170,11 +180,13 @@ export function MarketplaceProvider({ children }: { children: React.ReactNode })
     }
 
     // 2. Check registered accounts
-    const existing = allProfiles.find((p) => p.email.toLowerCase() === cleanEmail);
+    const existing = allProfiles.find(
+      (p) => p.email.toLowerCase() === lookupEmail || p.email.toLowerCase() === cleanEmail
+    );
     if (!existing) {
       return {
         success: false,
-        error: `No account registered with "${cleanEmail}". Please check your email or register a new account.`,
+        error: `No account registered with "${cleanEmail}". Use demo accounts (admin@findom.in, retailer@findom.in, supplier1@findom.in) or register below.`,
       };
     }
 
