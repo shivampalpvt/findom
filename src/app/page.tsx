@@ -56,7 +56,7 @@ export default function HomePage() {
       )}
 
       {/* 1. HERO SECTION (Aura luxury-interior-59 style: Full-width photographic backdrop + floating editorial white card) */}
-      <section className="relative w-full h-[640px] sm:h-[720px] lg:h-[760px] overflow-hidden bg-gray-900">
+      <section className="relative w-full min-h-[560px] py-10 sm:py-0 sm:h-[720px] lg:h-[760px] overflow-hidden bg-gray-900 flex items-center">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
@@ -68,30 +68,30 @@ export default function HomePage() {
         </div>
 
         {/* Floating Editorial Card (Direct Aura Luxury Interior 59 Pattern) */}
-        <div className="relative max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center">
-          <div className="bg-white p-8 sm:p-12 md:p-14 max-w-xl shadow-2xl border border-gray-100 animate-in fade-in slide-in-from-left-6 duration-700">
-            <span className="block text-[10px] font-sans font-semibold tracking-[0.28em] text-gray-500 uppercase mb-4">
+        <div className="relative max-w-7xl mx-auto w-full h-full px-4 sm:px-6 lg:px-8 flex items-center">
+          <div className="bg-white p-6 sm:p-10 md:p-14 w-full max-w-xl shadow-2xl border border-gray-100 animate-in fade-in slide-in-from-left-6 duration-700">
+            <span className="block text-[9px] sm:text-[10px] font-sans font-semibold tracking-[0.25em] sm:tracking-[0.28em] text-gray-500 uppercase mb-3 sm:mb-4">
               ARTISANAL WHOLESALE AQUACULTURE
             </span>
 
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-gray-900 leading-[1.15] mb-6">
+            <h1 className="font-serif text-2xl sm:text-4xl lg:text-5xl font-light text-gray-900 leading-[1.2] sm:leading-[1.15] mb-4 sm:mb-6">
               Curate an Atmosphere of Uncompromising Luxury
             </h1>
 
-            <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed mb-8">
+            <p className="text-xs sm:text-sm text-gray-600 font-normal leading-relaxed mb-6 sm:mb-8">
               Elevate your retail collection with verified live fish, rimless tanks, high-grade foods, and filtration equipment. Direct from premier hatcheries and wholesale distributors across Mumbai Metro with guaranteed 1-hour Porter delivery.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
               <Link
                 href="/products"
-                className="inline-flex items-center justify-center px-8 py-3.5 bg-gray-900 hover:bg-black text-white text-xs font-sans font-medium tracking-[0.2em] uppercase transition shadow-md"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 bg-gray-900 hover:bg-black text-white text-xs font-sans font-medium tracking-[0.2em] uppercase transition shadow-md"
               >
                 Shop Now
               </Link>
               <Link
                 href="/compare"
-                className="inline-flex items-center justify-center px-6 py-3.5 bg-transparent border border-gray-900 hover:bg-gray-50 text-gray-900 text-xs font-sans font-medium tracking-[0.2em] uppercase transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 bg-transparent border border-gray-900 hover:bg-gray-50 text-gray-900 text-xs font-sans font-medium tracking-[0.2em] uppercase transition"
               >
                 Compare Offers
               </Link>
@@ -266,7 +266,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Card: For Breeders / Suppliers */}
-            <div className="bg-white border border-gray-200 p-8 sm:p-10 flex flex-col justify-between shadow-xs hover:border-gray-900 transition duration-300">
+            <div className="bg-white border border-gray-200 p-6 sm:p-10 flex flex-col justify-between shadow-xs hover:border-gray-900 transition duration-300">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold tracking-[0.2em] uppercase">
@@ -316,7 +316,7 @@ export default function HomePage() {
             </div>
 
             {/* Right Card: For Retailers / Vendors */}
-            <div className="bg-gray-950 text-white border border-gray-800 p-8 sm:p-10 flex flex-col justify-between shadow-xl">
+            <div className="bg-gray-950 text-white border border-gray-800 p-6 sm:p-10 flex flex-col justify-between shadow-xl">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="px-3 py-1 bg-sky-950 text-sky-300 border border-sky-800 text-[10px] font-bold tracking-[0.2em] uppercase">
