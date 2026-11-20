@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useMarketplace } from '@/lib/store';
 import { DeliveryCondition } from '@/lib/types';
+import DirectImageUploader from '@/components/DirectImageUploader';
 
 export default function RetailerOrderDetailPage({
   params,
@@ -853,37 +854,21 @@ export default function RetailerOrderDetailPage({
                   </div>
 
                   <div>
-                    <label className="block font-bold text-rose-950 mb-1">
-                      Upload Proof Photo URL (Uncut bag / deceased specimen)
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="url"
-                        placeholder="Paste image URL of deceased fish in bag..."
-                        value={evidenceInput}
-                        onChange={(e) => setEvidenceInput(e.target.value)}
-                        className="flex-1 text-xs px-3 py-2 rounded-xl border border-rose-300 bg-white"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAddEvidencePhoto}
-                        className="px-3 py-2 bg-rose-700 text-white rounded-xl font-bold"
-                      >
-                        Add
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-2">
-                      {doaEvidencePhotos.map((p, i) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          key={i}
-                          src={p}
-                          alt="Proof"
-                          className="w-12 h-12 rounded-lg object-cover border border-rose-400"
-                        />
-                      ))}
-                    </div>
+                    <DirectImageUploader
+                      label="Unboxing & Dead-on-Arrival Proof Photos *"
+                      helperText="Choose proof photos directly from your phone or device storage. Required to substantiate live arrival escrow dispute."
+                      images={doaEvidencePhotos}
+                      onChange={setDoaEvidencePhotos}
+                      multiple={true}
+                      maxFiles={6}
+                      accentColor="rose"
+                      sampleImages={[
+                        {
+                          label: 'Sample Uncut Bag Check',
+                          url: 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?auto=format&fit=crop&w=800&q=80',
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
               )}

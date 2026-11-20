@@ -19,6 +19,7 @@ import {
 import { useMarketplace } from '@/lib/store';
 import PortalHeader from '@/components/PortalHeader';
 import { SupportTicket } from '@/lib/types';
+import DirectImageUploader from '@/components/DirectImageUploader';
 
 export default function RetailerDisputesPage() {
   const { currentUser, tickets, createTicket, orders } = useMarketplace();
@@ -325,32 +326,21 @@ export default function RetailerDisputesPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Attach Evidence Photo URL
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    placeholder="https://..."
-                    value={evidenceUrl}
-                    onChange={(e) => setEvidenceUrl(e.target.value)}
-                    className="flex-1 text-xs px-3 py-2 rounded-xl border border-slate-300 bg-slate-50"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddEvidence}
-                    className="px-3.5 py-2 bg-slate-900 text-white rounded-xl font-bold"
-                  >
-                    Add
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2 mt-2">
-                  {evidenceList.map((url, i) => (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img key={i} src={url} alt="Proof" className="w-12 h-12 rounded-lg object-cover border border-slate-300" />
-                  ))}
-                </div>
+                <DirectImageUploader
+                  label="Attach Evidence Photos *"
+                  helperText="Upload dead fish, punctured bag, or water parameter photos directly from storage. Files are stored on Findom server."
+                  images={evidenceList}
+                  onChange={setEvidenceList}
+                  multiple={true}
+                  maxFiles={6}
+                  accentColor="rose"
+                  sampleImages={[
+                    {
+                      label: 'Sample DOA Bag',
+                      url: 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?auto=format&fit=crop&w=800&q=80',
+                    },
+                  ]}
+                />
               </div>
 
               <div className="pt-2 flex items-center justify-end gap-2 border-t border-slate-100">

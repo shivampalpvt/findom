@@ -80,8 +80,8 @@ export default function SupplierListingsPage() {
     return matchesSearch && matchesCat && matchesStock;
   });
 
-  // Client-side image file processor with canvas optimization
-  const processImageFile = (file: File) => {
+  // Client-side image file processor that uploads directly to /api/upload on the server
+  const processImageFile = async (file: File) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       alert('Please select an image file (JPEG, PNG, WEBP).');
@@ -90,43 +90,32 @@ export default function SupplierListingsPage() {
     setIsProcessingImage(true);
     setUploadFileName(file.name);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const rawUrl = e.target?.result as string;
-      const img = new window.Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const maxDim = 1200;
-        let width = img.width;
-        let height = img.height;
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressed = canvas.toDataURL('image/jpeg', 0.85);
-          setFormData((prev) => ({ ...prev, imageUrl: compressed }));
-        } else {
-          setFormData((prev) => ({ ...prev, imageUrl: rawUrl }));
-        }
-        setIsProcessingImage(false);
+    try {
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadData,
+      });
+
+      const data = await res.json();
+      if (data.success && data.url) {
+        setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+      } else {
+        throw new Error(data.error || 'Server upload failed');
+      }
+    } catch (err: any) {
+      console.error('Error saving image to server:', err);
+      // Graceful fallback to client data URL if offline
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData((prev) => ({ ...prev, imageUrl: e.target?.result as string }));
       };
-      img.onerror = () => {
-        setFormData((prev) => ({ ...prev, imageUrl: rawUrl }));
-        setIsProcessingImage(false);
-      };
-      img.src = rawUrl;
-    };
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    } finally {
+      setIsProcessingImage(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -553,10 +542,10 @@ export default function SupplierListingsPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 mb-1">
                             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                            <span>Photo Ready for Listing</span>
+                            <span>Photo Saved to Findom Server</span>
                           </div>
-                          <p className="text-[11px] text-slate-500 mb-2 truncate">
-                            {uploadFileName || 'Specimen image loaded'}
+                          <p className="text-[11px] font-mono text-slate-500 mb-2 truncate">
+                            {formData.imageUrl.startsWith('/api/uploads') ? formData.imageUrl : (uploadFileName || 'Specimen image loaded')}
                           </p>
                           <div className="flex items-center gap-2">
                             <label className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer transition shadow-2xs inline-flex items-center gap-1.5">

@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { useMarketplace } from '@/lib/store';
 import { OrderStatus } from '@/lib/types';
+import DirectImageUploader from '@/components/DirectImageUploader';
 
 export default function SupplierOrderDetailPage({
   params,
@@ -40,7 +41,6 @@ export default function SupplierOrderDetailPage({
   const order = orders.find((o) => o.id === orderId);
 
   // Form states for dispatch photos
-  const [photoInput, setPhotoInput] = useState('');
   const [photoList, setPhotoList] = useState<string[]>(
     order?.dispatch_verification?.photo_urls || [
       'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?auto=format&fit=crop&w=800&q=80',
@@ -93,59 +93,6 @@ export default function SupplierOrderDetailPage({
       </div>
     );
   }
-
-  const handleAddPhoto = () => {
-    if (!photoInput.trim()) return;
-    setPhotoList([...photoList, photoInput.trim()]);
-    setPhotoInput('');
-  };
-
-  const handleDirectPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const files = Array.from(e.target.files);
-    files.forEach((file) => {
-      if (!file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const rawUrl = event.target?.result as string;
-        const img = new window.Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxDim = 1200;
-          let width = img.width;
-          let height = img.height;
-          if (width > maxDim || height > maxDim) {
-            if (width > height) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            const compressed = canvas.toDataURL('image/jpeg', 0.85);
-            setPhotoList((prev) => [...prev, compressed]);
-          } else {
-            setPhotoList((prev) => [...prev, rawUrl]);
-          }
-        };
-        img.onerror = () => {
-          setPhotoList((prev) => [...prev, rawUrl]);
-        };
-        img.src = rawUrl;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleRemovePhoto = (index: number) => {
-    setPhotoList(photoList.filter((_, i) => i !== index));
-  };
 
   const handleUploadPhotos = (e: React.FormEvent) => {
     e.preventDefault();
@@ -303,110 +250,30 @@ export default function SupplierOrderDetailPage({
               )}
 
               <form onSubmit={handleUploadPhotos} className="mt-5 space-y-4">
-                {/* Photo Upload: Direct Device Upload & URL fallback */}
-                <div>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                      Live Stock &amp; Packaging Proof Photos *
-                    </label>
-                    <label className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold cursor-pointer transition shadow-2xs">
-                      <Camera className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Upload Photos from Device / Camera</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        onChange={handleDirectPhotoUpload}
-                      />
-                    </label>
-                  </div>
-                  <div className="flex gap-2">
-                    <input
-                      type="url"
-                      placeholder="Or paste high-res photo URL (e.g. Cloudinary, AWS S3, Imgur)..."
-                      value={photoInput}
-                      onChange={(e) => setPhotoInput(e.target.value)}
-                      className="flex-1 text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddPhoto}
-                      className="px-4 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition flex items-center gap-1 shrink-0"
-                    >
-                      <Plus className="w-3.5 h-3.5" /> Add URL
-                    </button>
-                  </div>
-                </div>
-
-                {/* Preset sample photo buttons */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[11px] text-slate-400 font-medium">Demo stock images:</span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPhotoList([
-                        ...photoList,
-                        'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?auto=format&fit=crop&w=800&q=80',
-                      ])
-                    }
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                  >
-                    + Bagged Discus
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPhotoList([
-                        ...photoList,
-                        'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=800&q=80',
-                      ])
-                    }
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                  >
-                    + Cichlids Live Check
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPhotoList([
-                        ...photoList,
-                        'https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=800&q=80',
-                      ])
-                    }
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                  >
-                    + Guppy Trio Pack
-                  </button>
-                </div>
-
-                {/* Photos Grid Preview */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                  {photoList.map((url, idx) => (
-                    <div
-                      key={idx}
-                      className="relative group rounded-xl overflow-hidden border border-slate-200 aspect-video bg-slate-100"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={url}
-                        alt={`Dispatch proof ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemovePhoto(idx)}
-                        className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-rose-600 text-white rounded-md opacity-0 group-hover:opacity-100 transition"
-                        title="Remove photo"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                      <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-mono">
-                        Proof #{idx + 1}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                {/* Modern Direct Storage & Camera Photo Uploader */}
+                <DirectImageUploader
+                  label="Live Stock & Packaging Inspection Photos *"
+                  helperText="Select or drag live specimen photos and packaging boxes directly from your device storage or camera. All proof photos are securely uploaded and saved to Findom server storage."
+                  images={photoList}
+                  onChange={setPhotoList}
+                  multiple={true}
+                  maxFiles={8}
+                  accentColor="emerald"
+                  sampleImages={[
+                    {
+                      label: 'Bagged Discus',
+                      url: 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?auto=format&fit=crop&w=800&q=80',
+                    },
+                    {
+                      label: 'Cichlids Live Check',
+                      url: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=800&q=80',
+                    },
+                    {
+                      label: 'Guppy Trio Pack',
+                      url: 'https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=800&q=80',
+                    },
+                  ]}
+                />
 
                 {/* Packaging Specs & Water Quality Notes */}
                 <div>
